@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <meta charset="UTF-8"/>
+    <title>ReactJS + Spring Data REST</title>
+    <!--<script src="https://npmcdn.com/react-bootstrap-table/dist/react-bootstrap-table.min.js"></script>-->
+    <link rel="stylesheet" href="/style/bootstrap.min.css" />
+    <link rel="stylesheet" href="/style/react-bootstrap-table-all.min.css" />
+    <link rel="stylesheet" href="/main.css" />
+    <link rel="stylesheet" href="https://eternicode.github.io/bootstrap-datepicker/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" />
+    <!-- Custom CSS -->
+    <link href="style/css/sb-admin.css" rel="stylesheet" />
+    <!-- Morris Charts CSS -->
+    <link href="style/css/plugins/morris.css" rel="stylesheet" />
+    <!-- Custom Fonts -->
+    <link href="style/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<!--<div>-->
+<!--Hello, <span th:text="${#authentication.name}">user</span>.-->
+<form th:action="@{/logout}" method="post">
+<input type="submit" value="Log Out"/>
+</form>
+<!--</div>-->
+
+    <div id="react"  ></div>
+    <script src="built/commons.js"></script>
+    <script src="built/backend.bundle.js"></script>
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+    <script src="js/plugins/morris/raphael.min.js"></script>
+    <script src="js/plugins/morris/morris.min.js"></script>
+    <script src="js/plugins/morris/morris-data.js"></script>
+</body>
+</html>
