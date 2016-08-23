@@ -28,15 +28,15 @@ import org.springframework.security.access.prepost.PreAuthorize;
 public interface EmployeeRepository extends PagingAndSortingRepository<Staff, Long> {
 
 	@Override
-	@PreAuthorize("#staff?.manager == null or #staff?.manager?.name == authentication?.name")
+//	@PreAuthorize("#staff?.manager == null or #staff?.manager?.name == authentication?.name")
     Staff save(@Param("staff") Staff staff);
 
 	@Override
-	@PreAuthorize("@employeeRepository.findOne(#id)?.manager?.name == authentication?.name")
+//	@PreAuthorize("@employeeRepository.findOne(#id)?.manager?.name == authentication?.name")
 	void delete(@Param("id") Long id);
 
 	@Override
-	@PreAuthorize("#staff?.manager?.name == authentication?.name")
+//	@PreAuthorize("#staff?.manager?.name == authentication?.name")
 	void delete(@Param("staff") Staff staff);
 
 }

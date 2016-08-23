@@ -130,7 +130,7 @@ var MainLayout = React.createClass({
                   </li>
                   <li className="divider"></li>
                   <li>
-                    <a href="#"><i className="fa fa-fw fa-power-off"></i> Log Out</a>
+                    <a href="/logout"><i className="fa fa-fw fa-power-off"></i> Log Out</a>
                   </li>
                 </ul>
               </li>
@@ -138,10 +138,11 @@ var MainLayout = React.createClass({
             <div className="collapse navbar-collapse navbar-ex1-collapse">
               <ul className="nav navbar-nav side-nav">
                 <li className="active">
-                  <Link to="/" activeClassName="active"><i className="fa fa-fw fa-dashboard"></i> Dashboard</Link>
+                  <a href="/" activeClassName="active"><i className="fa fa-fw fa-dashboard"></i> Dashboard</a>
                 </li>
                 <li>
-                  <Link to="/users"><i className="fa fa-fw fa-user"></i> User </Link>
+                  <a href="/users"><i className="fa fa-fw fa-user"></i> User </a>
+                  {/*<Link to="/users"><i className="fa fa-fw fa-user"></i> User </Link>*/}
                 </li>
                 {/*<li>*/}
                   {/*<a href="tables.html"><i className="fa fa-fw fa-table"></i> Role </a>*/}
@@ -153,7 +154,7 @@ var MainLayout = React.createClass({
                   {/*<a href="bootstrap-elements.html"><i className="fa fa-fw fa-desktop"></i> Bootstrap Elements</a>*/}
                 {/*</li>*/}
                 <li>
-                  <Link to="/observations"><i className="fa fa-fw fa-wrench"></i> Observation Records</Link>
+                  <a href="/observations"><i className="fa fa-fw fa-wrench"></i> Observation Records</a>
                 </li>
                 <li>
                   <a href="javascript:;" data-toggle="collapse" data-target="#demo"><i

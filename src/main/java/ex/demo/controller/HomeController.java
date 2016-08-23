@@ -59,4 +59,10 @@ public class HomeController {
 	public String user(){
 	    return "index";
     }
+
+    @RequestMapping(value = "/observations", method = RequestMethod.GET)
+    public String observations(){
+        return "index";
+    }
+
 }

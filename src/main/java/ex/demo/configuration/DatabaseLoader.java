@@ -74,13 +74,22 @@ public class DatabaseLoader implements CommandLineRunner {
         this.employees.save(new Staff("Merry", "Brandybuck", "pony rider", oliver));
         this.employees.save(new Staff("Peregrin", "Took", "pipe smoker", oliver));
 
-        Observation obs1 = new Observation(1L, "1", "React Study", "Beginer", new Date(), "Some note....");
-        Observation obs2 = new Observation(2L, "1", "React Study", "Element", new Date(), "Some note....");
-        Observation obs3 = new Observation(3L, "1", "React Study", "Professional", new Date(), "Some note....");
+        Observation obs11 = new Observation(1L, "1", "React Study", "Beginer", new Date(), "Some note....");
+        Observation obs12 = new Observation(2L, "1", "React Study", "Element", new Date(), "Some note....");
+        Observation obs13 = new Observation(3L, "1", "React Study", "Professional", new Date(), "Some note....");
 
-        this.observationRepository.save(obs1);
-        this.observationRepository.save(obs2);
-        this.observationRepository.save(obs3);
+        Observation obs21 = new Observation(4L, "2", "React Study", "Beginer", new Date(), "Some note....");
+        Observation obs22 = new Observation(5L, "2", "React Study", "Element", new Date(), "Some note....");
+        Observation obs31 = new Observation(6L, "3", "React Study", "Professional", new Date(), "Some note....");
+
+        this.observationRepository.save(obs11);
+        this.observationRepository.save(obs12);
+        this.observationRepository.save(obs13);
+
+        this.observationRepository.save(obs21);
+        this.observationRepository.save(obs22);
+
+        this.observationRepository.save(obs31);
         SecurityContextHolder.clearContext();
     }
 }

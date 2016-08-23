@@ -149,6 +149,11 @@ var UserList = React.createClass({
       var newEmployee = row;
       var _path = row.id;
       if (_path !== undefined) {
+
+        if(!_path.startsWith("http")){
+          _path="/api/staffs/"+_path;
+        }
+
         newEmployee["id"] = row.id.substring(row.id.lastIndexOf("/") + 1);
         client({
           method: 'PUT',
@@ -244,7 +249,7 @@ var UserList = React.createClass({
     }
 
     function listObservation(cell, row) {
-      return <ModalDialog data={row.id.substring(row.id.lastIndexOf("/") + 1)} dataName={row.firstName} />
+      return <ModalDialog data={row.id.substring(row.id.lastIndexOf("/") + 1)} dataName={row.firstName}/>
     }
 
     return (
@@ -270,6 +275,19 @@ var UserList = React.createClass({
   }
 });
 
+window.deleteObs = function(id){
+  if(!confirm("Are u sure to delete this observation?")){
+    return;
+  }
+  var uri = "/api/observations/"+id;
+  $.ajax({
+    url: uri,
+    type: "DELETE",
+  }).then(function(data) {
+    $(".row-"+id).remove();
+  });
+}
+
 var ModalDialog = React.createClass({
 
   getInitialState: function () {
@@ -277,11 +295,15 @@ var ModalDialog = React.createClass({
   },
 
   loadFromServer1: function (pageSize) {
-
+    console.log(pageSize);
   },
 
   componentDidMount: function () {
-    this.serverRequest = $.get("/api/observations/search/findByStaffID?staffID=1", function (result) {
+    this.fetchObservationByStaff();
+  },
+
+  fetchObservationByStaff: function () {
+    this.serverRequest = $.get("/api/observations/search/findByStaffID?staffID=" + this.props.data, function (result) {
       this.setState({
         observations: result._embedded.observations
       });
@@ -304,22 +326,41 @@ var ModalDialog = React.createClass({
     });
     window.location = "#";
   },
+
   render: function () {
-    console.log("render called");
+    // this.fetchObservationByStaff();
     var id = this.props.data;
-    var rows="";
-    if (this.state.observations !== undefined) {
+    var rows = "";
+    if (this.state.observations.length > 0) {
+      rows += '<table class="table table-striped">';
+      rows += '<thead>';
+      rows += '<tr>';
+      rows += '<th>Course Name</th>';
+      rows += '<th>Level</th>';
+      rows += '<th>Programme</th>';
+      rows += '<th>Action</th>';
+      rows += '</tr>';
+      rows += '</thead>';
+      rows += '<tbody>';
       this.state.observations.map(function (observation) {
-        rows += "<tr>";
-        rows +=" <td>"+observation.courseName+"</td>";
-        rows +=" <td>"+observation.courseLevel+"</td>";
-        rows +=" <td>"+observation.programme+"</td>";
-        rows +=" <td><a href='#'>Details</a> / <a href='#'> Delete </a></td>";
-        rows +="</tr>";
+        var id = observation._links.self.href;
+        id = id.substring(id.lastIndexOf("/") + 1);
+        rows += "<tr class='row-"+id+"' >";
+        rows += " <td>" + observation.courseName + "</td>";
+        rows += " <td>" + observation.courseLevel + "</td>";
+        rows += " <td>" + observation.programme + "</td>";
+        rows += " <td><a href='#'>Details</a> / <a href='javascript:deleteObs("+ id +")'> Delete </a></td>";
+        rows += "</tr>";
       });
+      rows += '</tbody>';
+      rows += '</table>';
+    } else {
+      rows += 'No records found';
     }
 
-    function createMarkup() { return {__html: rows}; };
+    function createMarkup() {
+      return {__html: rows};
+    };
     return (
         <div>
 
@@ -339,19 +380,8 @@ var ModalDialog = React.createClass({
                   <button type="button" className="close" data-dismiss="modal">&times;</button>
                   <h4 className="modal-title">Observations record of {this.props.dataName}</h4>
                 </div>
-                <div className="modal-body">
-                  <table className="table table-striped">
-                    <thead>
-                    <tr>
-                      <th>Course Name</th>
-                      <th>Level</th>
-                      <th>Programme</th>
-                      <th>Action</th>
-                    </tr>
-                    </thead>
-                    <tbody dangerouslySetInnerHTML={createMarkup()} >
-                    </tbody>
-                  </table>
+                <div className="modal-body" dangerouslySetInnerHTML={createMarkup()}>
+
                 </div>
                 <div className="modal-footer">
                   <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
