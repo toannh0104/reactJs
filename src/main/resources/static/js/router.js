@@ -12,6 +12,7 @@ import Dashboard from './components/dashboard';
 import UserList from './components/user-list';
 import UserProfile from './components/user-profile';
 import Observations from './components/observation-record';
+import UserRole from './components/user-role';
 
 const history = useRouterHistory(useBeforeUnload(createHistory))()
 
@@ -34,6 +35,12 @@ export default (
         <Route path="observations">
           <Route component={SearchLayout}>
             <IndexRoute component={Observations}/>
+          </Route>
+        </Route>
+
+        <Route path="roles">
+          <Route component={SearchLayout}>
+            <IndexRoute component={UserRole}/>
           </Route>
         </Route>
 

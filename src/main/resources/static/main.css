@@ -309,3 +309,9 @@ td, th {
 .inputDate{
     
 }
+table td{
+    text-align: center;
+}
+table th{
+    text-align: center;
+}

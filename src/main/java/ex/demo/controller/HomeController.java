@@ -65,4 +65,9 @@ public class HomeController {
         return "index";
     }
 
+    @RequestMapping(value = "/roles", method = RequestMethod.GET)
+    public String roles(){
+        return "index";
+    }
+
 }

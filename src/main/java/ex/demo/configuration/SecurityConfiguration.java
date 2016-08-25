@@ -24,6 +24,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 /**
  * @author Greg Turnquist
@@ -53,7 +54,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.and()
 			.formLogin()
 				.loginPage("/login")
-				.defaultSuccessUrl("/", true)
+				.defaultSuccessUrl("/")
 				.permitAll()
 				.and()
 			.httpBasic()
@@ -61,6 +62,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 			.csrf().disable()
 			.logout()
 				.logoutSuccessUrl("/login");
+		http.addFilterBefore(new CustomFilter(), BasicAuthenticationFilter.class);
 	}
 
 }

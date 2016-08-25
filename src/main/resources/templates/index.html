@@ -18,12 +18,14 @@
 <body>
 <!--<div>-->
 <!--Hello, <span th:text="${#authentication.name}">user</span>.-->
-<form th:action="@{/logout}" method="post">
-<input type="submit" value="Log Out"/>
-</form>
+<!--<form th:action="@{/logout}" method="post">-->
+<!--<input type="submit" value="Log Out"/>-->
+<!--</form>-->
 <!--</div>-->
 
-    <div id="react"  ></div>
+<span style="display: none;" id="_userloged" th:text="${#authentication.name}"></span>
+<span style="display: none;" id="_userrole" th:text="${#authentication.authorities}"></span>
+<div id="react" ></div>
     <script src="built/commons.js"></script>
     <script src="built/backend.bundle.js"></script>
     <!-- jQuery -->

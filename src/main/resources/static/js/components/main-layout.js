@@ -1,5 +1,18 @@
 import React, {PropTypes, Component} from 'react';
 import { Link } from 'react-router';
+import $ from 'jquery';
+
+$(document).ready(function(){
+  $(".userloged").html($('#_userloged').html());
+  $(".side-nav li").each(function(index){
+    //$(".active").removeClass("active");
+    $(this).on("click", function(){
+      $(".side-nav .active").removeClass("active");
+      $(this).addClass("active");
+    });
+  })
+
+});
 
 var MainLayout = React.createClass({
 
@@ -44,7 +57,7 @@ var MainLayout = React.createClass({
                                         <img className="media-object" src="http://placehold.it/50x50" alt=""/>
                                     </span>
                         <div className="media-body">
-                          <h5 className="media-heading"><strong>John Smith</strong>
+                          <h5 className="media-heading userloged"  ><strong>Loading....</strong>
                           </h5>
                           <p className="small text-muted"><i className="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
                           <p>Lorem ipsum dolor sit amet, consectetur...</p>
@@ -59,7 +72,7 @@ var MainLayout = React.createClass({
                                         <img className="media-object" src="http://placehold.it/50x50" alt=""/>
                                     </span>
                         <div className="media-body">
-                          <h5 className="media-heading"><strong>John Smith</strong>
+                          <h5 className="media-heading userloged"><strong>Loading....</strong>
                           </h5>
                           <p className="small text-muted"><i className="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
                           <p>Lorem ipsum dolor sit amet, consectetur...</p>
@@ -74,7 +87,7 @@ var MainLayout = React.createClass({
                                         <img className="media-object" src="http://placehold.it/50x50" alt=""/>
                                     </span>
                         <div className="media-body">
-                          <h5 className="media-heading"><strong>John Smith</strong>
+                          <h5 className="media-heading userloged"><strong>Loading....</strong>
                           </h5>
                           <p className="small text-muted"><i className="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
                           <p>Lorem ipsum dolor sit amet, consectetur...</p>
@@ -116,7 +129,7 @@ var MainLayout = React.createClass({
                 </ul>
               </li>
               <li className="dropdown">
-                <a href="#" className="dropdown-toggle" data-toggle="dropdown"><i className="fa fa-user"></i> John Smith
+                <a href="#" className="dropdown-toggle" data-toggle="dropdown"><i className="fa fa-user userloged "></i> Loading....
                   <b className="caret"></b></a>
                 <ul className="dropdown-menu">
                   <li>
@@ -137,10 +150,10 @@ var MainLayout = React.createClass({
             </ul>
             <div className="collapse navbar-collapse navbar-ex1-collapse">
               <ul className="nav navbar-nav side-nav">
-                <li className="active">
+                <li className="active dashboard">
                   <a href="/" activeClassName="active"><i className="fa fa-fw fa-dashboard"></i> Dashboard</a>
                 </li>
-                <li>
+                <li className="user" >
                   <a href="/users"><i className="fa fa-fw fa-user"></i> User </a>
                   {/*<Link to="/users"><i className="fa fa-fw fa-user"></i> User </Link>*/}
                 </li>
@@ -160,13 +173,13 @@ var MainLayout = React.createClass({
                   <a href="javascript:;" data-toggle="collapse" data-target="#demo"><i
                       className="fa fa-fw fa-arrows-v"></i> Permissions <i className="fa fa-fw fa-caret-down"></i></a>
                   <ul id="demo" className="expanded">
-                    <li>
+                    <li className="group" >
                       <a href="#">Groups</a>
                     </li>
-                    <li>
-                      <a href="#">Role</a>
+                    <li className="role" >
+                      <a href="/roles">Role</a>
                     </li>
-                    <li>
+                    <li className="permission" >
                       <a href="#">Permission</a>
                     </li>
                   </ul>

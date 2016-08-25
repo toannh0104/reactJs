@@ -9,11 +9,11 @@ const root = '/api';
 window.ReactDOM = ReactDOM;
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 
-var UserList = React.createClass({
+var UserRole = React.createClass({
 
   loadFromServer(pageSize) {
     follow(client, root, [
-      {rel: 'staffs', params: {size: pageSize}}]
+      {rel: 'managers', params: {size: pageSize}}]
     ).then(employeeCollection => {
       return client({
         method: 'GET',
@@ -21,13 +21,13 @@ var UserList = React.createClass({
         headers: {'Accept': 'application/schema+json'}
       }).then(schema => {
         Object.keys(schema.entity.properties).forEach(function (property) {
-          // if (schema.entity.properties[property].hasOwnProperty('format') &&
-          //     schema.entity.properties[property].format === 'uri') {
-          //   delete schema.entity.properties[property];
-          // }
-          // if (schema.entity.properties[property].hasOwnProperty('$ref')) {
-          //   delete schema.entity.properties[property];
-          // }
+          if (schema.entity.properties[property].hasOwnProperty('format') &&
+              schema.entity.properties[property].format === 'uri') {
+            delete schema.entity.properties[property];
+          }
+          if (schema.entity.properties[property].hasOwnProperty('$ref')) {
+            delete schema.entity.properties[property];
+          }
         });
 
         this.schema = schema.entity;
@@ -36,7 +36,7 @@ var UserList = React.createClass({
       });
     }).then(employeeCollection => {
       this.page = employeeCollection.entity.page;
-      return employeeCollection.entity._embedded.staffs.map(employee =>
+      return employeeCollection.entity._embedded.managers.map(employee =>
           client({
             method: 'GET',
             path: employee._links.self.href
@@ -44,10 +44,10 @@ var UserList = React.createClass({
       );
     }).then(employeePromises => {
       return when.all(employeePromises);
-    }).done(employees => {
+    }).done(managers => {
       this.setState({
         page: this.page,
-        employees: employees,
+        managers: managers,
         attributes: Object.keys(this.schema.properties),
         pageSize: pageSize,
         links: this.links
@@ -56,7 +56,7 @@ var UserList = React.createClass({
   },
 
   onCreate(newEmployee) {
-    follow(client, root, ['employees']).done(response => {
+    follow(client, root, ['managers']).done(response => {
       client({
         method: 'POST',
         path: response.entity._links.self.href,
@@ -108,7 +108,7 @@ var UserList = React.createClass({
       this.links = employeeCollection.entity._links;
       this.page = employeeCollection.entity.page;
 
-      return employeeCollection.entity._embedded.employees.map(employee =>
+      return employeeCollection.entity._embedded.managers.map(employee =>
           client({
             method: 'GET',
             path: employee._links.self.href
@@ -116,10 +116,10 @@ var UserList = React.createClass({
       );
     }).then(employeePromises => {
       return when.all(employeePromises);
-    }).done(employees => {
+    }).done(managers => {
       this.setState({
         page: this.page,
-        employees: employees,
+        managers: managers,
         attributes: Object.keys(this.schema.properties),
         pageSize: this.state.pageSize,
         links: this.links
@@ -127,7 +127,7 @@ var UserList = React.createClass({
     });
   },
   getInitialState: function () {
-    return ({page: {}, employees: [], attributes: [], pageSize: 5, links: {}});
+    return ({page: {}, managers: [], attributes: [], pageSize: 5, links: {}});
   },
   componentDidMount() {
     this.loadFromServer(this.state.pageSize);
@@ -150,8 +150,8 @@ var UserList = React.createClass({
       var _path = row.id;
       if (_path !== undefined) {
 
-        if(!_path.startsWith("http")){
-          _path="/api/staffs/"+_path;
+        if (!_path.startsWith("http")) {
+          _path = "/api/staffs/" + _path;
         }
 
         newEmployee["id"] = row.id.substring(row.id.lastIndexOf("/") + 1);
@@ -229,16 +229,14 @@ var UserList = React.createClass({
       afterInsertRow: onAfterInsertRow   // A hook for after insert rows
     };
 
-    console.log(this.state.employees);
-    var employees = [];
-    if (this.state.employees.length > 0) {
-      employees = this.state.employees.map(function (employee) {
+    console.log(this.state.managers);
+    var managers = [];
+    if (this.state.managers.length > 0) {
+      managers = this.state.managers.map(function (manager) {
         var _emp = {};
-        _emp["id"] = employee.entity._links.self.href;
-        _emp["firstName"] = employee.entity.firstName;
-        _emp["lastName"] = employee.entity.lastName;
-        _emp["description"] = employee.entity.description;
-        _emp["discount"] = employee.entity.discount;
+        _emp["id"] = manager.entity._links.self.href;
+        _emp["name"] = manager.entity.name;
+        _emp["roles"] = manager.entity.roles;
         return _emp;
       });
     } else {
@@ -248,23 +246,20 @@ var UserList = React.createClass({
       return cell.substring(cell.lastIndexOf("/") + 1);
     }
 
-    function listObservation(cell, row) {
-      return <ModalDialog data={row.id.substring(row.id.lastIndexOf("/") + 1)} dataName={row.firstName}/>
+    function listRole(cell, row) {
+      return <ModalDialog data={row.id.substring(row.id.lastIndexOf("/") + 1)} dataName={row.name} dataId={row.id} />
     }
 
     return (
         <div id="page-wrapper">
-          <BootstrapTable data={employees} striped={true} hover={true} selectRow={selectRowProp}
+          <BootstrapTable data={managers} striped={true} hover={true} selectRow={selectRowProp}
                           cellEdit={cellEditProp} multiColumnSearch={true} exportCSV={true}
                           deleteRow={true} search={true} columnFilter={false} options={options}>
             <TableHeaderColumn dataField="id" width="30px" dataFormat={formatID} dataAlign="center"
                                isKey={true}>ID</TableHeaderColumn>
-            <TableHeaderColumn dataField="firstName" dataAlign="center" width="200px" editable={true} dataSort={true}>First
-              Name</TableHeaderColumn>
-            <TableHeaderColumn dataField="lastName" dataAlign="center" width="100px" editable={true} dataSort={true}>Last
-              Name</TableHeaderColumn>
-            <TableHeaderColumn dataField="manager" dataAlign="center" width="100px">Manager</TableHeaderColumn>
-            <TableHeaderColumn dataField="description" dataAlign="center" editable={false} dataFormat={listObservation}>
+            <TableHeaderColumn dataField="name" dataAlign="center" width="200px" > Name</TableHeaderColumn>
+            <TableHeaderColumn dataField="roles" dataAlign="center" width="500px" > Role</TableHeaderColumn>
+            <TableHeaderColumn dataField="description" dataAlign="center" editable={false} dataFormat={listRole}>
               Actions
             </TableHeaderColumn>
           </BootstrapTable>
@@ -275,23 +270,31 @@ var UserList = React.createClass({
   }
 });
 
-window.deleteObs = function(id){
-  if(!confirm("Are u sure to delete this observation?")){
+window.deleteObs = function (id) {
+  if (!confirm("Are u sure to delete this observation?")) {
     return;
   }
-  var uri = "/api/observations/"+id;
+  var uri = "/api/observations/" + id;
   $.ajax({
     url: uri,
     type: "DELETE",
-  }).then(function(data) {
-    $(".row-"+id).remove();
+    success: function (data, textStatus, xhr) {
+      console.log(data);
+    },
+    complete: function (xhr, textStatus) {
+      if (xhr.status === 403) {
+        alert(xhr.responseJSON.message);
+      }
+    }
+  }).then(function (data) {
+    $(".row-" + id).remove();
   });
 }
 
 var ModalDialog = React.createClass({
 
   getInitialState: function () {
-    return ({data: 0, observations: []});
+    return ({data: 0, userRoles: [], dataName:'', userRolesData: []});
   },
 
   loadFromServer1: function (pageSize) {
@@ -303,9 +306,9 @@ var ModalDialog = React.createClass({
   },
 
   fetchObservationByStaff: function () {
-    this.serverRequest = $.get("/api/observations/search/findByStaffID?staffID=" + this.props.data, function (result) {
+    this.serverRequest = $.get("/api/userRoles/search/findRoleByStaffId?staffId=" + this.props.data, function (result) {
       this.setState({
-        observations: result._embedded.observations
+        userRoles: result._embedded.userRoles
       });
     }.bind(this));
   },
@@ -314,42 +317,46 @@ var ModalDialog = React.createClass({
     this.serverRequest.abort();
   },
 
-  handleSubmit: function (e) {
-    e.preventDefault();
-    var newEmployee = {};
-    this.props.attributes.forEach(attribute => {
-      newEmployee[attribute] = ReactDOM.findDOMNode(this.refs[attribute]).value.trim();
-    });
-    this.props.onCreate(newEmployee);
-    this.props.attributes.forEach(attribute => {
-      ReactDOM.findDOMNode(this.refs[attribute]).value = ''; // clear out the dialog's inputs
-    });
-    window.location = "#";
-  },
-
   render: function () {
     // this.fetchObservationByStaff();
     var id = this.props.data;
+    window.roleDName = this.props.dataName;
+    window.roleDId = this.props.dataId;
     var rows = "";
-    if (this.state.observations.length > 0) {
+    var userRolesData=[];
+    if (this.state.userRoles.length > 0) {
+      // userRolesData = this.state.userRoles.map(function (userRole) {
+      //   var _userRolesData={};
+      //   _userRolesData["general"] = userRole.general;
+      //   _userRolesData["qualityAssurance"] = userRole.qualityAssurance;
+      //   _userRolesData["addObservation"] = userRole.addObservation;
+      //   _userRolesData["systemAdministration"] = userRole.systemAdministration;
+      //   var id = userRole._links.self.href;
+      //   id = id.substring(id.lastIndexOf("/") + 1);
+      //   _userRolesData["id"] = id;
+      //   return _userRolesData;
+      // });
+
       rows += '<table class="table table-striped">';
       rows += '<thead>';
       rows += '<tr>';
-      rows += '<th>Course Name</th>';
-      rows += '<th>Level</th>';
-      rows += '<th>Programme</th>';
+      rows += '<th>View</th>';
+      rows += '<th>Edit</th>';
+      rows += '<th>Add</th>';
+      rows += '<th>Admin</th>';
       rows += '<th>Action</th>';
       rows += '</tr>';
       rows += '</thead>';
       rows += '<tbody>';
-      this.state.observations.map(function (observation) {
-        var id = observation._links.self.href;
+      this.state.userRoles.map(function (userRole) {
+        var id = userRole._links.self.href;
         id = id.substring(id.lastIndexOf("/") + 1);
-        rows += "<tr class='row-"+id+"' >";
-        rows += " <td>" + observation.courseName + "</td>";
-        rows += " <td>" + observation.courseLevel + "</td>";
-        rows += " <td>" + observation.programme + "</td>";
-        rows += " <td><a href='#'>Details</a> / <a href='javascript:deleteObs("+ id +")'> Delete </a></td>";
+        rows += "<tr class='row-" + id + "' >";
+        rows += " <td> <input type='checkbox' onchange='javascript:doChangeRole(\""+id+"\", \"general\")' " + isChecked(userRole.general) + " /></td>";
+        rows += " <td> <input type='checkbox' onchange='javascript:doChangeRole(\""+id+"\", \"qualityAssurance\")' " + isChecked(userRole.qualityAssurance) + " /></td>";
+        rows += " <td> <input type='checkbox' onchange='javascript:doChangeRole(\""+id+"\", \"addObservation\")' " + isChecked(userRole.addObservation) + " /></td>";
+        rows += " <td> <input type='checkbox' onchange='javascript:doChangeRole(\""+id+"\", \"systemAdministration\")' " + isChecked(userRole.systemAdministration) + "/></td>";
+        rows += " <td><a href='#'> Remove </a></td>";
         rows += "</tr>";
       });
       rows += '</tbody>';
@@ -358,15 +365,23 @@ var ModalDialog = React.createClass({
       rows += 'No records found';
     }
 
+    function isChecked(value) {
+      if(value === true){
+        return "checked";
+      }
+      return "";
+    }
+
     function createMarkup() {
       return {__html: rows};
     };
+
     return (
         <div>
 
           <a type="button" data-toggle="modal"
              data-target={this.props.data === null ? '#modal' : '#modal-' + this.props.data} className="btn btn-link">
-            <i className="glyphicon glyphicon-list-alt"></i> Observation
+            <i className="glyphicon glyphicon-list-alt"></i> Permission
           </a>
           <a type="button" data-toggle="modal" className="btn btn-link">
             <i className="glyphicon glyphicon-remove"></i> Delete
@@ -374,14 +389,20 @@ var ModalDialog = React.createClass({
 
           <div className="modal fade" id={this.props.data === null ? 'modal' : 'modal-' + this.props.data}
                role="dialog">
-            <div className="modal-dialog modal-lg">
+            <div className="modal-dialog modal-sl">
               <div className="modal-content">
                 <div className="modal-header">
                   <button type="button" className="close" data-dismiss="modal">&times;</button>
-                  <h4 className="modal-title">Observations record of {this.props.dataName}</h4>
+                  <h4 className="modal-title">Permissions of {this.props.dataName}</h4>
                 </div>
-                <div className="modal-body" dangerouslySetInnerHTML={createMarkup()}>
-
+                <div className="modal-body" dangerouslySetInnerHTML={createMarkup()} >
+                  {/*<BootstrapTable data={this.state.userRoles} striped={true} hover={true} >*/}
+                    {/*<TableHeaderColumn dataField="id" width="30px" columnClassName="hide" dataAlign="center" isKey={true}>ID</TableHeaderColumn>*/}
+                    {/*<TableHeaderColumn dataField="general" dataAlign="center" > View</TableHeaderColumn>*/}
+                    {/*<TableHeaderColumn dataField="qualityAssurance" dataAlign="center" > Update</TableHeaderColumn>*/}
+                    {/*<TableHeaderColumn dataField="addObservation" dataAlign="center" > Add</TableHeaderColumn>*/}
+                    {/*<TableHeaderColumn dataField="systemAdministration" dataAlign="center" > Admin</TableHeaderColumn>*/}
+                  {/*</BootstrapTable>*/}
                 </div>
                 <div className="modal-footer">
                   <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
@@ -395,39 +416,48 @@ var ModalDialog = React.createClass({
   }
 })
 
+window.doChangeRole = function(staffId, type){
+  var uri = "/api/userRoles/"+staffId;
 
-var CreateDialog = React.createClass({
-  handleSubmit: function (e) {
-    e.preventDefault();
-    var newEmployee = {};
-    this.props.attributes.forEach(attribute => {
-      newEmployee[attribute] = ReactDOM.findDOMNode(this.refs[attribute]).value.trim();
-    });
-    this.props.onCreate(newEmployee);
-    this.props.attributes.forEach(attribute => {
-      ReactDOM.findDOMNode(this.refs[attribute]).value = ''; // clear out the dialog's inputs
-    });
-    window.location = "#";
-  },
-  render: function () {
-    return (
-        <div>
-          <a href="#createEmployee" className="btn btn-primary">Create</a>
+  var currentRole={};
+  $.ajax({
+    url: uri,
+    async: false,
+    type: "GET",
+    success: function (data, textStatus, xhr) {
+      console.log(data);
+      currentRole.staffId = data.staffId;
+      currentRole.general = data.general;
+      currentRole.qualityAssurance = data.qualityAssurance;
+      currentRole.addObservation = data.addObservation;
+      currentRole.systemAdministration = data.systemAdministration;
+    },
+    complete: function (xhr, textStatus) {
+      if (xhr.status === 403) {
+        alert(xhr.responseJSON.message);
+      }
+    }
+  });
 
-          <div id="createEmployee" className="modalDialog">
-            <div>
-              <a href="#" title="Close" className="close">X</a>
-              <h2>Create new employee</h2>
-              <form>
-                <p >
-                  <input type="text" className="field"/>
-                </p>
-                <button onClick={this.handleSubmit}>Create</button>
-              </form>
-            </div>
-          </div>
-        </div>
-    )
-  }
-})
-export default UserList;
+  //update
+  currentRole[type] = !currentRole[type];
+  console.log(currentRole);
+  $.ajax({
+    url: uri,
+    type: "PUT",
+    data: JSON.stringify(currentRole),
+    headers: {'Content-Type': 'application/json'},
+    success: function (data, textStatus, xhr) {
+      console.log(data);
+    },
+    complete: function (xhr, textStatus) {
+      if (xhr.status === 403) {
+        alert(xhr.responseJSON.message);
+      }
+    }
+  });
+
+}
+
+
+export default UserRole;

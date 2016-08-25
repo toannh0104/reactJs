@@ -24,7 +24,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
  * @author Greg Turnquist
  */
 // tag::code[]
-@PreAuthorize("hasRole('ROLE_MANAGER')")
+//@PreAuthorize("hasRole('ROLE_MANAGER')"  )
 public interface EmployeeRepository extends PagingAndSortingRepository<Staff, Long> {
 
 	@Override

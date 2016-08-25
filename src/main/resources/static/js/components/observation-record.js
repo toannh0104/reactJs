@@ -26,7 +26,15 @@ const ObservationRecord = React.createClass({
       headers: {
         "Content-Type": "application/json"
       },
-      data: JSON.stringify(Observation)
+      data: JSON.stringify(Observation),
+      success: function (data, textStatus, xhr) {
+        console.log(data);
+      },
+      complete: function (xhr, textStatus) {
+        if (xhr.status === 403) {
+          alert(xhr.responseJSON.message);
+        }
+      }
     }).then(function(data) {
       console.log(data);
       alert("The new observation record has been created!.")

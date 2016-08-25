@@ -18,9 +18,11 @@ package ex.demo.configuration;
 import ex.demo.entity.Manager;
 import ex.demo.entity.Observation;
 import ex.demo.entity.Staff;
+import ex.demo.entity.UserRole;
 import ex.demo.repository.EmployeeRepository;
 import ex.demo.repository.ManagerRepository;
 import ex.demo.repository.ObservationRepository;
+import ex.demo.repository.UserRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -39,24 +41,48 @@ public class DatabaseLoader implements CommandLineRunner {
     private final EmployeeRepository employees;
     private final ManagerRepository managers;
     private final ObservationRepository observationRepository;
+    private final UserRoleRepository userRoleRepository;
 
     @Autowired
     public DatabaseLoader(EmployeeRepository employeeRepository,
                           ManagerRepository managerRepository,
-                          ObservationRepository observationRepository) {
+                          ObservationRepository observationRepository,
+                          UserRoleRepository userRoleRepository) {
 
         this.employees = employeeRepository;
         this.managers = managerRepository;
         this.observationRepository = observationRepository;
+        this.userRoleRepository = userRoleRepository;
     }
 
     @Override
     public void run(String... strings) throws Exception {
 
         Manager greg = this.managers.save(new Manager("greg", "turnquist",
-                "ROLE_MANAGER"));
+                new String[]{"ROLE_MANAGER", "ROLE_ADMIN"}));
         Manager oliver = this.managers.save(new Manager("oliver", "gierke",
+                new String[]{"ROLE_MANAGER", "ROLE_ADMIN"}));
+
+        Manager viewer = this.managers.save(new Manager("viewer", "viewer",
                 "ROLE_MANAGER"));
+        Manager editor = this.managers.save(new Manager("editor", "editor",
+                "ROLE_MANAGER"));
+        Manager creator = this.managers.save(new Manager("creator", "creator",
+                "ROLE_MANAGER"));
+
+        UserRole userRole001 = new UserRole(oliver.getId(), true, true, true, true);
+
+        UserRole userRoleViewer = new UserRole(viewer.getId(), true, false, false, false);
+        UserRole userRoleEditor = new UserRole(editor.getId(), true, true, false, false);
+        UserRole userRoleCreator = new UserRole(creator.getId(), true, false, true, false);
+
+//        UserRole userRole005 = new UserRole(oliver.getId(), true, true, true, false);
+
+        userRoleRepository.save(userRole001);
+        userRoleRepository.save(userRoleViewer);
+        userRoleRepository.save(userRoleEditor);
+        userRoleRepository.save(userRoleCreator);
+
 
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken("greg", "doesn't matter",

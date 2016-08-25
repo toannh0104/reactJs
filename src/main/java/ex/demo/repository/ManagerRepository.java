@@ -16,14 +16,15 @@
 package ex.demo.repository;
 
 import ex.demo.entity.Manager;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 /**
  * @author Greg Turnquist
  */
-@RepositoryRestResource(exported = false)
-public interface ManagerRepository extends Repository<Manager, Long> {
+@RepositoryRestResource
+public interface ManagerRepository extends PagingAndSortingRepository<Manager, Long> {
 
 	Manager save(Manager manager);
 
