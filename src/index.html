@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Transportation App</title>
+</head>
+
+<body>
+    <script src="/_tmp/vendors.dll.js"></script>
+    <script src="/static/main.bundle.js"></script>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js', {
+                scope: '/'
+            }).then(function(reg) {
+
+                if (reg.installing) {
+                    console.log('installing');
+                } else if (reg.waiting) {
+                    console.log('installed');
+                } else if (reg.active) {
+                    console.log('active');
+                }
+            }).catch(function(error) {
+                console.log(error);
+            });
+        }
+    </script>
+</body>
+
+</html>
