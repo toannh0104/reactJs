@@ -7,6 +7,7 @@ const follow = require('../../follow');
 const stompClient = require('../../websocket-listener');
 const root = '/api';
 window.ReactDOM = ReactDOM;
+import $ from 'jquery';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 
 var UserList = React.createClass({
@@ -127,7 +128,7 @@ var UserList = React.createClass({
     });
   },
   getInitialState: function () {
-    return ({page: {}, employees: [], attributes: [], pageSize: 5, links: {}});
+    return ({page: {}, employees: [], attributes: [], pageSize: 20, links: {}});
   },
   componentDidMount() {
     this.loadFromServer(this.state.pageSize);
@@ -150,8 +151,8 @@ var UserList = React.createClass({
       var _path = row.id;
       if (_path !== undefined) {
 
-        if(!_path.startsWith("http")){
-          _path="/api/staffs/"+_path;
+        if (!_path.startsWith("http")) {
+          _path = "/api/staffs/" + _path;
         }
 
         newEmployee["id"] = row.id.substring(row.id.lastIndexOf("/") + 1);
@@ -168,7 +169,7 @@ var UserList = React.createClass({
     }
 
     function onAfterTableComplete() {
-      console.log('Table render complete.');
+      $(".react-bs-table-add-btn").attr("data-target", "new-staff-modal");
     }
 
     function onAfterDeleteRow(rowKeys) {
@@ -226,7 +227,8 @@ var UserList = React.createClass({
       sortOrder: "desc",  //default sort order
       afterTableComplete: onAfterTableComplete, // A hook for after table render complete.
       afterDeleteRow: onAfterDeleteRow,  // A hook for after droping rows.
-      afterInsertRow: onAfterInsertRow   // A hook for after insert rows
+      afterInsertRow: onAfterInsertRow,   // A hook for after insert rows
+      onAddRow: console.log("adding....")
     };
 
     console.log(this.state.employees);
@@ -252,46 +254,146 @@ var UserList = React.createClass({
       return <ModalDialog data={row.id.substring(row.id.lastIndexOf("/") + 1)} dataName={row.firstName}/>
     }
 
+    function doAddNewStaff(e) {
+      var email = $(".addNewStaff #email");
+      var firstName = $(".addNewStaff #firstName");
+      var lastName = $(".addNewStaff #lastName");
+      var officePhone = $(".addNewStaff #officephone");
+      var Staff = {
+        email: email.val(),
+        firstName: firstName.val(),
+        lastName: lastName.val(),
+        officePhone: officePhone.val()
+      }
+
+      if (firstName.val() === "") {
+        alert("Invalid data");
+        firstName.focus();
+        return;
+      }
+      var uri = "/api/staffs/";
+      $.ajax({
+        url: uri,
+        type: "POST",
+        data: JSON.stringify(Staff),
+        headers: {'Content-Type': 'application/json'}
+      }).then(function (data) {
+        console.log(data);
+        $("#new-staff-modal .close").trigger("click");
+        this.loadFromServer(this.state.pageSize);
+      });
+
+    }
+
     return (
         <div id="page-wrapper">
-          <BootstrapTable data={employees} striped={true} hover={true} selectRow={selectRowProp}
-                          cellEdit={cellEditProp} multiColumnSearch={true} exportCSV={true}
-                          deleteRow={true} search={true} columnFilter={false} options={options}>
+          <BootstrapTable data={employees} striped={true} hover={true} selectRow={selectRowProp} pagination={true}
+                          insertRow={true}
+                          cellEdit={cellEditProp} multiColumnSearch={true} search={true} columnFilter={false} options={options}>
             <TableHeaderColumn dataField="id" width="30px" dataFormat={formatID} dataAlign="center"
                                isKey={true}>ID</TableHeaderColumn>
             <TableHeaderColumn dataField="firstName" dataAlign="center" width="200px" editable={true} dataSort={true}>First
               Name</TableHeaderColumn>
-            <TableHeaderColumn dataField="lastName" dataAlign="center" width="100px" editable={true} dataSort={true}>Last
+            <TableHeaderColumn dataField="lastName" dataAlign="center" width="200px" editable={true} dataSort={true}>Last
               Name</TableHeaderColumn>
-            <TableHeaderColumn dataField="manager" dataAlign="center" width="100px">Manager</TableHeaderColumn>
             <TableHeaderColumn dataField="description" dataAlign="center" editable={false} dataFormat={listObservation}>
               Actions
             </TableHeaderColumn>
           </BootstrapTable>
 
+          <div className="modal fade" id="new-staff-modal" role="dialog">
+            <div className="modal-dialog modal-lg">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <button type="button" className="close" data-dismiss="modal">&times;</button>
+                  <h4 className="modal-title">Add new Staff</h4>
+                </div>
+                <div className="modal-body">
+                  <form className="form-horizontal addNewStaff">
+                    <div className="form-group">
+                      <label className="control-label col-sm-2" htmlFor="email">Email:</label>
+                      <div className="col-sm-10">
+                        <input type="email" className="form-control" id="email" placeholder="Enter email"/>
+                      </div>
+                    </div>
 
+                    <div className="form-group">
+                      <label className="control-label col-sm-2" htmlFor="firstName">First name:</label>
+                      <div className="col-sm-10">
+                        <input type="input" className="form-control" id="firstName" placeholder="Enter first name"/>
+                      </div>
+                    </div>
+
+                    <div className="form-group">
+                      <label className="control-label col-sm-2" htmlFor="lastName">Last name:</label>
+                      <div className="col-sm-10">
+                        <input type="input" className="form-control" id="lastName" placeholder="Enter last name"/>
+                      </div>
+                    </div>
+                    <div className="form-group">
+                      <label className="control-label col-sm-2" htmlFor="officephone">Office phone:</label>
+                      <div className="col-sm-10">
+                        <input type="input" className="form-control" id="officephone" placeholder="Enter office phone"/>
+                      </div>
+                    </div>
+
+                    <div className="form-group">
+                      <div className="col-sm-offset-2 col-sm-10">
+                        <button type="button" onClick={doAddNewStaff} className="btn btn-primary">Submit</button>
+                        <button type="button" className="btn btn-default">Clear</button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
         </div>
     )
   }
 });
 
-window.deleteObs = function(id){
-  if(!confirm("Are u sure to delete this observation?")){
+$(document).ready(function () {
+  $(".react-bs-table-add-btn").click(function () {
+    jQuery("#new-staff-modal").modal('show');
+  });
+});
+
+window.deleteUser = function (id, e) {
+  if (!confirm("Are u sure to delete this user?")) {
     return;
   }
-  var uri = "/api/observations/"+id;
+  var uri = "/api/staffs/" + id;
   $.ajax({
     url: uri,
     type: "DELETE",
-  }).then(function(data) {
-    $(".row-"+id).remove();
+  }).then(function (data) {
+    $("#modal-" + id).parents("tr").remove();
+  });
+}
+
+window.deleteObs = function (id) {
+  if (!confirm("Are u sure to delete this observation?")) {
+    return;
+  }
+  var uri = "/api/observations/" + id;
+  $.ajax({
+    url: uri,
+    type: "DELETE",
+  }).then(function (data) {
+    $(".row-" + id).remove();
   });
 }
 
 var ModalDialog = React.createClass({
 
   getInitialState: function () {
-    return ({data: 0, observations: []});
+    return ({data: 0, observations: [], dataDelete: ''});
   },
 
   loadFromServer1: function (pageSize) {
@@ -345,11 +447,11 @@ var ModalDialog = React.createClass({
       this.state.observations.map(function (observation) {
         var id = observation._links.self.href;
         id = id.substring(id.lastIndexOf("/") + 1);
-        rows += "<tr class='row-"+id+"' >";
+        rows += "<tr class='row-" + id + "' >";
         rows += " <td>" + observation.courseName + "</td>";
         rows += " <td>" + observation.courseLevel + "</td>";
         rows += " <td>" + observation.programme + "</td>";
-        rows += " <td><a href='#'>Details</a> / <a href='javascript:deleteObs("+ id +")'> Delete </a></td>";
+        rows += " <td><a href='/observations?id=" + id + "' >Edit</a> / <a href='javascript:deleteObs(" + id + ")'> Delete </a></td>";
         rows += "</tr>";
       });
       rows += '</tbody>';
@@ -368,8 +470,8 @@ var ModalDialog = React.createClass({
              data-target={this.props.data === null ? '#modal' : '#modal-' + this.props.data} className="btn btn-link">
             <i className="glyphicon glyphicon-list-alt"></i> Observation
           </a>
-          <a type="button" data-toggle="modal" className="btn btn-link">
-            <i className="glyphicon glyphicon-remove"></i> Delete
+          <a type="button" href={"javascript:deleteUser('" + this.props.data + "')"} className="btn btn-link">
+            <i className="glyphicon glyphicon-list-alt"></i> Delete
           </a>
 
           <div className="modal fade" id={this.props.data === null ? 'modal' : 'modal-' + this.props.data}

@@ -16,7 +16,9 @@
 package ex.demo.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -61,8 +63,13 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/observations", method = RequestMethod.GET)
-    public String observations(){
-        return "index";
+    public String observations(@RequestParam(value = "id", required = false) String id, Model model){
+    	if(!StringUtils.isEmpty(id)){
+    		model.addAttribute("Action", "EDIT");
+		}else {
+			model.addAttribute("Action", "ADD");
+		}
+        return "observation";
     }
 
     @RequestMapping(value = "/roles", method = RequestMethod.GET)

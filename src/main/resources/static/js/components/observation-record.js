@@ -2,7 +2,37 @@ import React from 'react';
 import DatePicker from 'react-datepicker'
 var DateTimeField = require('react-bootstrap-datetimepicker');
 import $ from 'jquery';
+const ObservationRecordEditAction = "EDIT";
 const ObservationRecord = React.createClass({
+
+  getInitialState: function () {
+    return ({observation: []});
+  },
+
+  componentDidMount: function () {
+    this.fetchObservationById();
+  },
+
+  fetchObservationById: function () {
+    var url = "/api/observations";
+    var currentAction = $("#currentAction").val();
+
+    if (ObservationRecordEditAction == currentAction) {
+      var currentActionData = $("#currentActionData").val();
+      url += "/"+ currentActionData;
+    }else {
+      return;
+    }
+    this.serverRequest = $.get(url, function (result) {
+      this.setState({
+        observation: result
+      });
+    }.bind(this));
+  },
+
+  componentWillUnmount: function () {
+    this.serverRequest.abort();
+  },
 
   handleSubmit: function (e) {
     e.preventDefault();
@@ -19,9 +49,16 @@ const ObservationRecord = React.createClass({
 
     var Observation = {staffID: staffID, courseName: inputCourseName, programme:inputProgramme, date: inputDate, note: inputNote};
     var url = "/api/observations";
+    var type = "POST";
+    if (ObservationRecordEditAction == currentAction) {
+      var currentActionData = $("#currentActionData").val();
+      url += "/"+ currentActionData;
+      type = "PUT"
+    }
+
     $.ajax({
       url: url,
-      type: "POST",
+      type: type,
       dataType: "json",
       headers: {
         "Content-Type": "application/json"
@@ -45,6 +82,10 @@ const ObservationRecord = React.createClass({
     });
   },
   render: function () {
+    var staffId = this.state.observation.staffID;
+    var courseName = this.state.observation.courseName;
+    var programme = this.state.observation.programme;
+    var note = this.state.observation.note;
     return (
         <div id="page-wrapper">
           <div className="panel panel-default">
@@ -58,7 +99,7 @@ const ObservationRecord = React.createClass({
                         title="required">*</abbr>) </label>
                   </div>
                   <div className="col-xs-4">
-                    <input name="inputStaffID" disabled="disabled" className="form-control" id="inputStaffID"
+                    <input name="inputStaffID" disabled="disabled" className="form-control" id="inputStaffID" value={staffId}
                            placeholder="Staff ID"/>
                   </div>
                   <div className="col-xs-2">
@@ -71,7 +112,7 @@ const ObservationRecord = React.createClass({
                     <label htmlFor="inputCourseName" className="control-label">Course Name</label>
                   </div>
                   <div className="col-xs-4">
-                    <input name="inputCourseName" id="inputCourseName" className="form-control"
+                    <input name="inputCourseName" id="inputCourseName" className="form-control" value={courseName}
                            placeholder="Course name"/>
                   </div>
                 </div>
@@ -81,7 +122,7 @@ const ObservationRecord = React.createClass({
                     <label htmlFor="inputProgramme" className="control-label">Programme</label>
                   </div>
                   <div className="col-xs-4">
-                    <input name="inputProgramme" id="inputProgramme" className="form-control"
+                    <input name="inputProgramme" id="inputProgramme" className="form-control" value={programme}
                            placeholder="Programme"/>
                   </div>
                 </div>
@@ -92,7 +133,7 @@ const ObservationRecord = React.createClass({
                         title="required">*</abbr>) </label>
                   </div>
                   <div className="col-xs-3">
-                    <DateTimeField id="inputDate" className="inputDate" inputFormat="YYYY/MM/DD"/>
+                    <DateTimeField id="inputDate" className="inputDate" inputFormat="YYYY/MM/DD"  />
                   </div>
                 </div>
 
@@ -102,7 +143,7 @@ const ObservationRecord = React.createClass({
                   </div>
                   <div className="col-xs-4">
                     <textarea name="inputNote" id="inputNote" className="form-control"
-                              placeholder="Note..."/>
+                              placeholder="Note...">{note}</textarea>
                   </div>
                 </div>
 

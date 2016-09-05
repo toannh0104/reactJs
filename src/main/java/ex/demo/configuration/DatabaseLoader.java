@@ -60,7 +60,7 @@ public class DatabaseLoader implements CommandLineRunner {
 
         Manager greg = this.managers.save(new Manager("greg", "turnquist",
                 new String[]{"ROLE_MANAGER", "ROLE_ADMIN"}));
-        Manager oliver = this.managers.save(new Manager("oliver", "gierke",
+            Manager oliver = this.managers.save(new Manager("oliver", "gierke",
                 new String[]{"ROLE_MANAGER", "ROLE_ADMIN"}));
 
         Manager viewer = this.managers.save(new Manager("viewer", "viewer",
