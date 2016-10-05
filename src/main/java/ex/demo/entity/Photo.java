@@ -31,13 +31,23 @@ public class Photo {
 	private @Id @GeneratedValue Long id;
 	private String title;
     private String image;
+    private int likes;
 
 	public Photo() {}
 
-	public Photo(String title, String image) {
+	public Photo(String title, int likes,  String image) {
 		this.title = title;
+        this.likes = likes;
         this.image = image;
 	}
+
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
 
     public Long getId() {
         return id;

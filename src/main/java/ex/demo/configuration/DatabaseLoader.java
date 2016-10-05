@@ -114,12 +114,12 @@ public class DatabaseLoader implements CommandLineRunner {
 
         this.observationRepository.save(obs31);
 
-        Photo p1 = new Photo("Title 001", "https://scontent.cdninstagram.com/hphotos-xap1/t51.2885-15/e35/12552326_495932673919321_1443393332_n.jpg");
-        Photo p2 = new Photo("Title 002",  "https://scontent.cdninstagram.com/hphotos-xaf1/t51.2885-15/e35/12407344_1283694208323785_735653395_n.jpg");
-        Photo p3 = new Photo("Title 003",  "https://scontent.cdninstagram.com/hphotos-xpf1/t51.2885-15/e35/923995_1704188643150533_1383710275_n.jpg");
-        Photo p4 = new Photo("Title 004",  "https://scontent.cdninstagram.com/hphotos-xap1/t51.2885-15/e35/12407480_1654828594805097_152207166_n.jpg");
-        Photo p5 = new Photo("Title 005",  "https://scontent.cdninstagram.com/hphotos-xap1/t51.2885-15/e35/11875511_1562439187344831_813588280_n.jpg");
-        Photo p6 = new Photo("Title 006",  "https://scontent.cdninstagram.com/hphotos-xfa1/t51.2885-15/e35/11917950_927755223968499_1198055371_n.jpg");
+        Photo p1 = new Photo("Title 001",1, "https://scontent.cdninstagram.com/hphotos-xap1/t51.2885-15/e35/12552326_495932673919321_1443393332_n.jpg");
+        Photo p2 = new Photo("Title 002", 11, "https://scontent.cdninstagram.com/hphotos-xaf1/t51.2885-15/e35/12407344_1283694208323785_735653395_n.jpg");
+        Photo p3 = new Photo("Title 003",  111,"https://scontent.cdninstagram.com/hphotos-xpf1/t51.2885-15/e35/923995_1704188643150533_1383710275_n.jpg");
+        Photo p4 = new Photo("Title 004",2,  "https://scontent.cdninstagram.com/hphotos-xap1/t51.2885-15/e35/12407480_1654828594805097_152207166_n.jpg");
+        Photo p5 = new Photo("Title 005",22,  "https://scontent.cdninstagram.com/hphotos-xap1/t51.2885-15/e35/11875511_1562439187344831_813588280_n.jpg");
+        Photo p6 = new Photo("Title 006", 222, "https://scontent.cdninstagram.com/hphotos-xfa1/t51.2885-15/e35/11917950_927755223968499_1198055371_n.jpg");
 
         photoRepository.save(p1);
         photoRepository.save(p2);
