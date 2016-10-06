@@ -49,9 +49,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 			.authorizeRequests()
-				.antMatchers("/built/**", "/main.css").permitAll();
+				.antMatchers("/built/**", "/main.css").permitAll()
 //				.anyRequest().authenticated()
-//				.and()
+				.and()
 //			.formLogin()
 //				.loginPage("/login")
 //				.defaultSuccessUrl("/")
@@ -59,7 +59,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 //				.and()
 //			.httpBasic()
 //				.and()
-//			.csrf().disable()
+			.csrf().disable();
 //			.logout()
 //				.logoutSuccessUrl("/login");
 		http.addFilterBefore(new CustomFilter(), BasicAuthenticationFilter.class);

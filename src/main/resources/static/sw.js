@@ -11,7 +11,7 @@ self.addEventListener('install', function (event) {
               '/build/data/stop_list.json',
               '/build/data/stop_time.json',
               '/build/data/trips.json',
-              '/build/assets/images/train_logo.jpg',
+              // '/build/assets/images/train_logo.jpg',
               '/build/static/main.bundle.js'
               // '_tmp/vendors.dll.js'
             ]
