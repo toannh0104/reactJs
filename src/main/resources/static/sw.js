@@ -40,3 +40,11 @@ self.addEventListener('fetch', function (event) {
   );
 });
 
+    self.addEventListener('sync', function(event) {
+        if (event.tag == 'myFirstSync') {
+            event.waitUntil(
+                console.log("Sync.........")
+            );
+        }
+    });
+

@@ -1,7 +1,8 @@
 // increment
-export function increment(id) {
+export function increment(index, id) {
   return {
     type: 'INCREMENT_LIKES',
+    index: index,
     id
   }
 }

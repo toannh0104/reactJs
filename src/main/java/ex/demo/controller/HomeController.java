@@ -77,4 +77,10 @@ public class HomeController {
         return "index";
     }
 
+
+	@RequestMapping(value = "/bgsync", method = RequestMethod.GET)
+	public String bgsync(){
+		return "bgsync";
+	}
+
 }
