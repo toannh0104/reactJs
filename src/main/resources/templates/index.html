@@ -2,43 +2,107 @@
 <html>
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Transportation App</title>
     <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-    <link rel="stylesheet" href="css/ki.css" />
+    <link rel="stylesheet" href="css/ki.css"/>
 </head>
 
 <body>
+<div id="connectionStatus">You are currently offline. Any requests made will be queued and synced as soon as you are
+    connected again.
+</div>
+<script src="/build/static/main.bundle.js"></script>
+<script>
+    function isOnline() {
+        var connectionStatus = document.getElementById('connectionStatus');
 
-    <script src="/build/static/main.bundle.js"></script>
-
-    <script>
-        $( document ).ready(function() {
-            $("style").remove();
-        });
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js', {
-                scope: '/'
-            }).then(function(reg) {
-
-                if (reg.installing) {
-                    console.log('installing');
-                } else if (reg.waiting) {
-                    console.log('installed');
-                } else if (reg.active) {
-                    console.log('active');
+        if (navigator.onLine) {
+            connectionStatus.innerHTML = 'You are currently online!';
+            console.log("Queue offline are sync...");
+            var likeQueues = JSON.parse(localStorage.getItem("like_queue"));
+            window.likeQueues = likeQueues;
+            var removeItem=[];
+            $.each(likeQueues, function (index, value) {
+                if ("INCREMENT_LIKES" === value.type) {
+                    $.ajax({
+                        url: value.id,
+                        async: false,
+                        type: "GET",
+                        success: function (data, status) {
+                            console.log(data);
+                            var _id = data._links.self.href;
+                            var postURI = _id.substring(0, _id.lastIndexOf("/"));
+                            _id = _id.substr(_id.lastIndexOf("/") + 1, _id.length);
+                            var cpost = {
+                                title: data.title,
+                                likes: data.likes + 1,
+                                image: data.image,
+                                id: _id
+                            }
+                            $.ajax({
+                                type: "POST",
+                                async: false,
+                                url: postURI,
+                                data: JSON.stringify(cpost),
+                                contentType: "application/json",
+                                success: function (response) {
+                                    if (response) {
+                                        removeItem.push(response._links.self.href);
+                                        console.log("Somebody" + response + " was added in list !");
+                                    } else {
+                                        console.log("Cannot add to list !");
+                                    }
+                                },
+                                error: function (error) {
+                                    console.log(error);
+                                }
+                            });
+                        },
+                        error: function (error) {
+                            console.log(error);
+                        }
+                    });
                 }
-            }).catch(function(error) {
-                console.log(error);
-            });
+            })
+            console.log(removeItem);
+            localStorage.removeItem("like_queue");
+        } else {
+            connectionStatus.innerHTML =
+                    'You are currently offline. Any requests made will be queued and synced as soon as you are connected again.';
         }
+    }
 
-        // Then later, request a one-off sync:
-        navigator.serviceWorker.ready.then(function(swRegistration) {
-            return swRegistration.sync.register('myFirstSync');
+    window.addEventListener('online', isOnline);
+    window.addEventListener('offline', isOnline);
+    isOnline();
+
+    $(document).ready(function () {
+        $("style").remove();
+    });
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js', {
+            scope: '/'
+        }).then(function (reg) {
+
+            if (reg.installing) {
+                console.log('installing');
+            } else if (reg.waiting) {
+                console.log('installed');
+            } else if (reg.active) {
+                console.log('active');
+            }
+        }).catch(function (error) {
+            console.log(error);
         });
+    }
 
-    </script>
+    // Then later, request a one-off sync:
+    navigator.serviceWorker.ready.then(function (swRegistration) {
+        return swRegistration.sync.register('myFirstSync');
+    });
+
+</script>
 </body>
 
 </html>

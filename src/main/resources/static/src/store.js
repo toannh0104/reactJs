@@ -16,9 +16,16 @@ const defaultState = {
     comments
 };
 
+const persistedState = localStorage.getItem('reduxState') ? JSON.parse(localStorage.getItem('reduxState')) : {}
+
 const store1 = createStore(rootReducer, defaultState);
 
-const store = createStore(rootReducer, middleware);
+//const store = createStore(rootReducer, middleware);
+const store = createStore(
+    rootReducer,
+    persistedState,
+    middleware
+)
 
 store.dispatch((dispatch) => {    
 	axios.get("/api/photos")

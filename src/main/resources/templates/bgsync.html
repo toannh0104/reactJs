@@ -1,19 +1,50 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-    <title> Service Workers - Background Sync</title>
-    <script type="text/javascript" src="script.js"></script>
-    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <meta charset="UTF-8" />
+    <title>Basic BackgroundSync Example</title>
 </head>
-
 <body>
-    <div class="container">
-        <div class="title">Service Worker - Communication</div>
-        <button type="button" onclick="registerOneTimeSync()">One Time Sync</button>
-        <button type="button" onclick="registerPeriodicSync()">Periodic Sync</button>
-        <div class="help">Note: Open your console and make sure to refresh the page once to get demo working. One time sync supported in Chrome Canary. Periodic sync not supported yet.</div>
-    </div>
-</body>
+<div id="connectionStatus">You are currently offline. Any requests made will be queued and synced as soon as you are connected again.</div>
+<p>Click on the button below to make an HTTP request.</p>
+    <button id="requestButton">Make an HTTP request - do it!</button>
+    <script>
+        // Connection Status
+        function isOnline() {
+            var connectionStatus = document.getElementById('connectionStatus');
 
+            if (navigator.onLine){
+                connectionStatus.innerHTML = 'You are currently online!';
+            }
+            else{
+                connectionStatus.innerHTML = 'You are currently offline. Any requests made will be queued and synced as soon as you are connected again.';
+            }
+        }
+
+        window.addEventListener('online', isOnline);
+        window.addEventListener('offline', isOnline);
+        isOnline();
+
+        // Service Worker code
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw1.js').then((registration) => {
+                return navigator.serviceWorker.ready;
+            }).then((registration) => {
+                // register sync
+                document.getElementById('requestButton').addEventListener('click', () => {
+                    registration.sync.register('image-fetch').then(() => {
+                        console.log('sync registered');
+                    }).catch(function(error){
+                        console.log('Unable to fetch image.');
+                    });
+                });
+            }).catch(function(error){
+                console.log('Unable to register Service Worker.');
+            });
+        }
+        else{
+            console.log('Service Worker functionality not supported.');
+        }
+    </script>
+</body>
 </html>

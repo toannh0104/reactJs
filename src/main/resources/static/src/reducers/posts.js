@@ -10,6 +10,7 @@ function posts(state = [], action) {
         case 'INCREMENT_LIKES' :
             console.log("Incrementing Likes!!");
             var i = action.index;
+            var _objURI = action.id;
             axios.get(action.id)
                 .then((response) => {
                     var data = response.data;
@@ -30,13 +31,28 @@ function posts(state = [], action) {
                         })
                         .then((res) => {
                             console.log(res);
-                            if(res.status === 201){
+                            if (res.status === 201) {
                                 state[i].likes = res.data.likes;
-                            }else{
+                            } else {
                                 state[i].likes = res.data._embedded.photos[i].likes;
                             }
                         })
                 })
+                .catch(function (error) {
+                    console.log('Error when increasing like: ', error);
+                    var likeQueues = localStorage.getItem("like_queue");
+                    if(likeQueues === null){
+                        likeQueues=[];
+                    }else {
+                        likeQueues = JSON.parse(likeQueues);
+                    }
+                    var like_queue_item = {
+                        id: _objURI,
+                        type: 'INCREMENT_LIKES'
+                    }
+                    likeQueues.push(like_queue_item);
+                    localStorage.setItem("like_queue", JSON.stringify(likeQueues));
+                });
             return [
                 ...state.slice(0, i), // before the one we are updating
                 {...state[i], likes: state[i].likes + 1},
