@@ -7,7 +7,7 @@ const Single = React.createClass({
     console.log("Render Single");
     const { postId } = this.props.params;
 
-    const i = this.props.posts.findIndex((post) => post.code === postId);
+    const i = this.props.posts.findIndex((post) => post._links.self.href.endsWith(postId));
     const post = this.props.posts[i];
 
     const postComments = this.props.comments[postId] || [];
