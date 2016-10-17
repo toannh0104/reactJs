@@ -17,9 +17,8 @@ package ex.demo.entity;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 /**
  * @author Greg Turnquist
@@ -28,18 +27,20 @@ import javax.persistence.Id;
 @Entity
 public class Photo {
 
-	private @Id @GeneratedValue Long id;
-	private String title;
+    private
+    @Id
+    @GeneratedValue
+    Long id;
+    private String title;
+    @Column
     private String image;
+    @Column
     private int likes;
+    @OneToMany(mappedBy = "photo")
+    private List<Comment> comments;
 
-	public Photo() {}
-
-	public Photo(String title, int likes,  String image) {
-		this.title = title;
-        this.likes = likes;
-        this.image = image;
-	}
+    @Transient
+    private int index;
 
     public int getLikes() {
         return likes;
@@ -71,5 +72,21 @@ public class Photo {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 }

@@ -5,6 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Transportation App</title>
     <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="http://github.hubspot.com/offline/offline.min.js"></script>
     <link rel="stylesheet" href="css/ki.css"/>
 </head>
 
@@ -78,6 +79,17 @@
     isOnline();
 
     $(document).ready(function () {
+
+        Offline.on('down', function () {
+            console.log("down....")
+        });
+
+        Offline.on('up', function () {
+            console.log("up....")
+        });
+
+        Offline.check();
+
         $("style").remove();
     });
     if ('serviceWorker' in navigator) {

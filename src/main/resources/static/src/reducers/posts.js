@@ -1,8 +1,31 @@
 import axios from 'axios';
-var querystring = require('querystring');
+// var querystring = require('querystring');
+// require('stompjs');
+//
+// var SockJS = require('sockjs-client'); // <1>
+const stompClient = require('../../websocket-listener');
 
+// console.log()
+// stompClient.register({
+//     route: "/topic/posts",
+//     callback: updateState
+// })
+
+function updateState(message) {
+    console.log("Update state: " + message);
+}
 function posts(state = [], action) {
     switch (action.type) {
+        case 'SYNC_LIKE' :
+            var syncId = JSON.parse(action.payload.body).id;
+            var syncLike = JSON.parse(action.payload.body).likes;
+            var i = JSON.parse(action.payload.body).index;
+            return [
+                ...state.slice(0, i), // before the one we are updating
+                {...state[i], likes: (syncLike === state[i].likes) ? state[i].likes : state[i].likes + 1},
+                ...state.slice(i + 1), // after the one we are updating
+            ]
+            break;
         case 'FETCH_PHOTOS' :
             console.log("fetch photos !!!");
             return action.payload
@@ -33,6 +56,15 @@ function posts(state = [], action) {
                             console.log(res);
                             if (res.status === 201) {
                                 state[i].likes = res.data.likes;
+                                var _id = res.data._links.self.href;
+                                _id = _id.substr(_id.lastIndexOf("/") + 1, _id.length);
+                                stompClient.default.send("/app/photo", {}, JSON.stringify({
+                                    'title': "TITLE",
+                                    'image': "IMG",
+                                    'likes': res.data.likes,
+                                    'id': _id,
+                                    'index': i
+                                }));
                             } else {
                                 state[i].likes = res.data._embedded.photos[i].likes;
                             }
@@ -41,9 +73,9 @@ function posts(state = [], action) {
                 .catch(function (error) {
                     console.log('Error when increasing like: ', error);
                     var likeQueues = localStorage.getItem("like_queue");
-                    if(likeQueues === null){
-                        likeQueues=[];
-                    }else {
+                    if (likeQueues === null) {
+                        likeQueues = [];
+                    } else {
                         likeQueues = JSON.parse(likeQueues);
                     }
                     var like_queue_item = {

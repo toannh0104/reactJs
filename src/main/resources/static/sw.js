@@ -7,13 +7,7 @@ self.addEventListener('install', function (event) {
             [
               '/',
               '/css/ki.css',
-              '/build/data/stops.json',
-              '/build/data/stop_list.json',
-              '/build/data/stop_time.json',
-              '/build/data/trips.json',
-              // '/build/assets/images/train_logo.jpg',
               '/build/static/main.bundle.js'
-              // '_tmp/vendors.dll.js'
             ]
         );
       })
@@ -32,19 +26,12 @@ self.addEventListener('fetch', function (event) {
           }
           var responseCache = response.clone();
           caches.open(staticCacheName).then(function (cache) {
-            cache.put(event.request, responseCache);
+              if("HEAD" !== event.request.method){
+                  cache.put(event.request, responseCache);
+              }
           });
           return response;
         });
       })
   );
 });
-
-    self.addEventListener('sync', function(event) {
-        if (event.tag == 'myFirstSync') {
-            event.waitUntil(
-                console.log("Sync.........")
-            );
-        }
-    });
-

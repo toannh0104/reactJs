@@ -21,6 +21,7 @@ function postComments(state = [], action) {
 }
 
 function comments(state = [], action) {
+  console.log("COMMENT");
   if(typeof action.postId !== 'undefined') {
     return {
       // take the current state

@@ -11,14 +11,14 @@ import thunk from 'redux-thunk';
 
 const middleware = applyMiddleware(thunk, logger());
 // create an object for the default data
-const defaultState = {
-    posts,
-    comments
-};
+// const defaultState = {
+//     posts,
+//     comments
+// };
 
 const persistedState = localStorage.getItem('reduxState') ? JSON.parse(localStorage.getItem('reduxState')) : {}
 
-const store1 = createStore(rootReducer, defaultState);
+// const store1 = createStore(rootReducer, defaultState);
 
 //const store = createStore(rootReducer, middleware);
 const store = createStore(
@@ -34,8 +34,12 @@ store.dispatch((dispatch) => {
 		})
 })
 
-
-
+store.dispatch((dispatch) => {
+    axios.get("/api/comments")
+        .then((response) => {
+            dispatch({type: "FETCH_COMMENTS", payload: response.data._embedded.comments});
+        })
+})
 export const history = syncHistoryWithStore(browserHistory, store);
 
 if (module.hot) {
