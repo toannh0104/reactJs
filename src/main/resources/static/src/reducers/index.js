@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
 
-import posts from './posts';
+import boards from './boards';
 import comments from './comments';
 // import photos from './photos';
 
-const rootReducer = combineReducers({posts, comments, routing: routerReducer });
+const rootReducer = combineReducers({boards, comments, routing: routerReducer });
 
 export default rootReducer;

@@ -6,7 +6,7 @@ import Main from './Main';
 function mapStateToProps(state) {
 	console.log("Reduxstagram render");
   return {
-    posts: state.posts,
+    boards: state.boards,
     comments: state.comments
   }
 }

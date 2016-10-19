@@ -34,6 +34,21 @@
             display: block;
             padding: 2px;
         }
+        a{
+            cursor: pointer;
+            } 
+
+            .board{
+                width: 100%;
+            }
+            .list{
+                width: 500px;
+                float:left;
+            }
+            .cards{
+                width: 500px;
+                float:left;
+            }
     </style>
 </head>
 
@@ -65,13 +80,13 @@
 </div>
 <div id="root" ></div>
 <script>
-    $(document).ready(function () {
+    //$(document).ready(function () {
         var onAuthorize = function () {
             updateLoggedIn();
             //$("#output").empty();
 
-//            Trello.members.get("me", function (member) {
-//                $("#fullName").text(member.fullName);
+            Trello.members.get("me", function (member) {
+                $("#fullName").text(member.fullName);
 //                // is assigned to
 //                Trello.get("members/me/cards", function (cards) {
 //                    console.log(cards);
@@ -96,7 +111,7 @@
 //                                .text(card.name).appendTo($cards);
 //                    });
 //                });
-//            });
+            });
 
         };
 
@@ -124,7 +139,7 @@
                     })
                 });
         $("#disconnect").click(logout);
-    });
+ //   });
     //        if ('serviceWorker' in navigator) {
     //            navigator.serviceWorker.register('/sw.js', {
     //                scope: '/'

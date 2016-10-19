@@ -14,8 +14,18 @@ const Dashboard = React.createClass({
 
         Trello.members.get("me", function (member) {
             $("#fullName").text(member.fullName);
-            var $cards = $(".tab-content");
-            $cards.empty();
+            var $content = $(".tab-content");
+            $content.empty();
+            console.log("xxxxx");
+            if (currentTab === 0) {
+                Trello.get("members/me/boards?key=" + Trello.key() + "&token=" + Trello.token(), function (boards) { 
+                    $(boards).each(function (i, card) {
+                        $("<a>").attr({href: card.url, target: "trello"})
+                            .addClass("card")
+                            .text(card.name).appendTo($content);
+                    });
+                });
+            }
             if (currentTab === 1) {
                 // is assigned to
                 Trello.get("members/me/cards", function (cards) {
@@ -23,27 +33,17 @@ const Dashboard = React.createClass({
                     $(cards).each(function (i, card) {
                         $("<a>").attr({href: card.url, target: "trello"})
                             .addClass("card")
-                            .text(card.name).appendTo($cards);
+                            .text(card.name).appendTo($content);
                     });
                 });
-            } if (currentTab === 2){
-                Trello.get("members/me/cards?filter=closed", function (cards) {
-                    // var $cards = $(".tab-content");
-                    // $cards.empty();
+            } else {
+                // is assigned to
+                Trello.get("members/me/list", function (cards) {
+
                     $(cards).each(function (i, card) {
                         $("<a>").attr({href: card.url, target: "trello"})
                             .addClass("card")
-                            .text(card.name).appendTo($cards);
-                    });
-                });
-            }else{
-                Trello.get("members/me/boards?key="+Trello.key()+"&token="+Trello.token(), function (cards) {
-                    // var $cards = $(".tab-content");
-                    // $cards.empty();
-                    $(cards).each(function (i, card) {
-                        $("<a>").attr({href: card.url, target: "trello"})
-                            .addClass("card")
-                            .text(card.name).appendTo($cards);
+                            .text(card.name).appendTo($content);
                     });
                 });
             }
@@ -51,13 +51,13 @@ const Dashboard = React.createClass({
     },
 
     render() {
-console.log("Render dashboard");
+        console.log("Render dashboard");
         return (
-            <Tabs activeKey={this.state.key} onSelect={this.handleSelect} id="trello-react">
-                <Tab label="Boards" eventKey={3} title="Boards">No boards content</Tab>
-                <Tab label="Assigned" eventKey={1} title="Assigned">No assigned content</Tab>
-                <Tab label="Closed" eventKey={2} title="Closed">No closed content</Tab>
-            </Tabs>
+            <div>
+                <div>Boards</div>
+                <div><List prp /></div>
+                <div>Cards</div>
+            </div>
         );
     }
 });
