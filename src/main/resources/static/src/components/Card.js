@@ -31,7 +31,7 @@ const Card = React.createClass({
           <td>NAME</td>
         </tr>
           { items.map((card, i) =>
-          <tr>
+          <tr key={i}>
               <td>{card.id}</td>
               <td>{card.name}</td>
           </tr>)}

@@ -14,7 +14,7 @@ const List = React.createClass({
      loadList(boardId) {
       var self = this;
         Trello.get("boards/"+this.props.boardId+"/lists?fields=name,idList,url", function (response) {
-          self.state.items= response          
+          self.state.items= response
          });          
       },  
 
@@ -25,7 +25,7 @@ const List = React.createClass({
             currentList: listId
         }) 
         console.log(this.state);       
-        
+
       },
 
   render() {
@@ -43,7 +43,7 @@ const List = React.createClass({
           <td>NAME</td>
         </tr>
           { items.map((list, i) =>
-          <tr>
+          <tr key={i}>
               <td>{list.id}</td>
               <td><a onClick={this.handleClick.bind(null, list.id)} >{list.name}</a></td>
           </tr>)}
