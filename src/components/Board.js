@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import List from './List';
 
+var t = 0;
+
 const Board = React.createClass({   
 
     getInitialState: function() {        
@@ -11,13 +13,22 @@ const Board = React.createClass({
       },    
 
      handleClick(boardId) {
+        var self = this;
+        t++;
+        var xx = setTimeout(function(){
+            self.handleClick(boardId); 
+        }, 1000);
+        if(t > 2){
+            clearTimeout(xx);
+        }
         console.log("board")
         this.setState({
             isShowList: true,
             currentBoard: boardId
         }) 
         console.log(this.state);       
-        ReactDOM.render(<List boardId={boardId}/>, document.getElementById("lists"));
+        var listElement = document.getElementById("lists");
+        ReactDOM.render(<List boardId={boardId} />, listElement);
       },
 
     render() {
