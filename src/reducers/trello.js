@@ -2,7 +2,8 @@ var initState = {
     boards: [],
     lists: [],
     cards: [],
-    login: false
+    login: false,
+    locations: []
 }
 function trello(state = initState, action) {
     switch (action.type) {

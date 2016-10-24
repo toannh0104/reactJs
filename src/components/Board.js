@@ -1,18 +1,8 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import List from './List';
 import {fetchLists } from '../actions/actionCreators';
 import store from '../store';
 const Board = React.createClass({
-
-    getInitialState: function(){
-        return {
-            showList: false,
-            lists: [],
-            cards: []
-        }
-    },
-
 
     loadData(boardId){
             console.log(boardId);
@@ -45,11 +35,12 @@ const Board = React.createClass({
                 <div className="list" >
                     {lists.length > 0 ? (
                         <div>
-                            { lists.map((list, i) =>
+                            {/* lists.map((list, i) =>
                                 <div key={i}>                                  
                                     <a > {list.name} </a>                                  
                                 </div>
-                            )}     
+                            )*/}
+                            <List {...this.props} />
                         </div>
 
                         ) : null }
