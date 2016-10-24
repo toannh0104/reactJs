@@ -53,9 +53,10 @@
     "redux-thunk": "^2.1.0",
     "reselect": "^2.5.3",
     "shelljs": "^0.7.4",
-    "style-loader": "^0.13.1",
     "sockjs-client": "^1.0.3",
-    "stompjs": "^2.3.3"
+    "stompjs": "^2.3.3",
+    "style-loader": "^0.13.1",
+    "trello": "^0.5.1"
   },
   "devDependencies": {
     "babel-core": "^6.14.0",
