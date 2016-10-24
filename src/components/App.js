@@ -6,8 +6,10 @@ import Main from './Main';
 function mapStateToProps(state) {
 	console.log("Reduxstagram render");
   return {
-    boards: state.boards,
-    comments: state.comments
+    boards: state.trello.boards,
+    lists: state.trello.lists,
+    cards: state.trello.cards,
+    loggin: state.trello.login
   }
 }
 

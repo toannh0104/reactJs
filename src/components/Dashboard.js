@@ -1,36 +1,28 @@
 import React from 'react';
 import {Pie} from 'react-chartjs-2';
-
-const data = {
-    labels: [
-        'Red',
-        'Green',
-        'Yellow'
-    ],
-    datasets: [{
-        data: [300, 50, 100],
-        backgroundColor: [
-        '#FF6384',
-        '#36A2EB',
-        '#FFCE56'
-        ],
-        hoverBackgroundColor: [
-        '#FF6384',
-        '#36A2EB',
-        '#FFCE56'
-        ]
-    }]
-};
-
+import Login from './Login';
+import Board from './Board';
+import {doLogout} from '../actions/actionCreators';
 const Dashboard = React.createClass({
  
+    doLogout(){
+        doLogout();
+    },
+
     render() {
         console.log("Render dashboard");
+        var loggedIn = !!this.props.loggin;
         return (
             <div>
-                <Pie data={data} />
-                <div>Boards</div>
-                <div>Cards</div>
+                {loggedIn ? (                       
+                    <div id="warrper" >
+                        <div id="header">
+                            Logged in to as <span id="fullName"></span>
+                            <a id="disconnect" href="#" onClick={this.doLogout} > Log Out</a>
+                        </div>
+                        <Board {...this.props} />
+                    </div>
+                     ): (<Login />)}          
             </div>
         );
     }

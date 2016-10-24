@@ -16,10 +16,18 @@ const store = createStore(
 )
 
 store.dispatch((dispatch) => {    
-	console.log("FETCH_BOARDS");
-	 Trello.get("members/me/boards?key="+Trello.key()+"&token="+Trello.token(), function (response) {
-         dispatch({type: "FETCH_BOARDS", payload: response});
-     });	
+    if(Trello.token() === localStorage.getItem("trello_token")){
+            store.dispatch({type: "UPDATE_LOGGED_STATE", payload:true})
+    }
+    if(Trello.token() !== undefined){
+        console.log("FETCH_BOARDS");
+    	 Trello.get("members/me/boards?token="+Trello.token())
+         .then((boards => {
+            console.log("hihi")
+            dispatch({type: "FETCH_BOARDS", payload: boards});
+         })); 
+    } 
+    
 })
 
 

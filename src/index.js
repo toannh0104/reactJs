@@ -4,7 +4,6 @@ import { render } from 'react-dom';
 
 // Import Components
 import App from './components/App';
-import Board from './components/Board';
 import Dashboard from './components/Dashboard';
 
 // import react router deps
@@ -16,7 +15,7 @@ const router = (
     <Provider store={store}>
       <Router history={history}>
         <Route path="/" component={App}>
-          <IndexRoute component={Board}></IndexRoute>
+          <IndexRoute component={Dashboard}></IndexRoute>
         </Route>
       </Router>
     </Provider>
