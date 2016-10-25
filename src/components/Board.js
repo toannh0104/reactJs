@@ -1,7 +1,6 @@
 import React from 'react';
 import List from './List';
 import {fetchLists } from '../actions/actionCreators';
-import store from '../store';
 const Board = React.createClass({
 
     loadData(boardId){
@@ -11,15 +10,12 @@ const Board = React.createClass({
     },
 
     render() {
-        console.log(store);
-        console.log("Render Boards")
-        
         var boards = this.props.boards;
         var lists = this.props.lists;
         return (
             <div className="warrper" >
                 <div className="board">
-                    <h2>List of Boards</h2>
+                    <h3>Boards</h3>
                     <table className="table table-hover" style={{width:300}} >
                         <tbody>                        
                             { boards.map((board, i) =>

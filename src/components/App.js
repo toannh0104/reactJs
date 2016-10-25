@@ -10,7 +10,12 @@ function mapStateToProps(state) {
     lists: state.trello.lists,
     cards: state.trello.cards,
     loggin: state.trello.login,
-    locations: ["Vietnam", "Bali", "Bandung", "Jakata", "Yogyakarta"]
+    locations: [{name: "Vietnam", candidate: []},
+      {name: "Bali", candidate: []},
+      {name: "Bandung", candidate:[]},
+      {name: "Bahasa", candidate:[]},
+      {name: "Jakata", candidate:[]},
+      {name: "Yogyakarta", candidate:[]}]
   }
 }
 
