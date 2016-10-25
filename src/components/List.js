@@ -146,23 +146,42 @@ const dataPie = {
     }]
 };
 
-
+console.log("___________________");
+console.log(dataLine)
         return (
             <div className="board1">
+            
+            <h1/>
 
+<table>
+    { 
+      _yLabels.map((label, i) =>
+        <tr key={i}>
+          <td>{label}</td>
+
+          {
+            datasets.map((ds, j) =>
+            <td>
+              {ds.label}
+            </td>
+
+          )}
+          
+        </tr>)
+    }
+</table>
+{/*
                 <div className="list">
                     <h3>Root List</h3>
                     <Line data={dataLine} options={chartOptions} height="150"/>
                 </div>
-
-               
                  <div className="list" >
-                 <h3>Root List</h3>
                  <HorizontalBar data={dataLine} />
                  </div>
-                 <div className="list" >
-                 <Pie data={dataPie} />
-                 </div>
+*/}
+               
+                
+                 
                  
             </div>
         )
