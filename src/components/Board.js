@@ -1,5 +1,5 @@
 import React from 'react';
-import List from './List';
+import List from './List2';
 import {fetchLists } from '../actions/actionCreators';
 const Board = React.createClass({
 
@@ -12,6 +12,7 @@ const Board = React.createClass({
     render() {
         var boards = this.props.boards;
         var lists = this.props.lists;
+         //$("#pivotContainer").empty();
         return (
             <div className="warrper" >
                 <div className="board">
