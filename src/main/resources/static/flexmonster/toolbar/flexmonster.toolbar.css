@@ -1106,3 +1106,6 @@ div.fm-bgColorPicker {
 #fm-credentials {
     padding: 5px;
 }
+#fm-tab-bookmark-default{
+	display: none;
+}

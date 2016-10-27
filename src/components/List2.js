@@ -5,7 +5,6 @@ const List = React.createClass({
 
     render() {
         console.log("Render List")
-        $("#pivotContainer").empty();
         var datasets = [];
         var _yLabels = [];
         var labels = [];
@@ -69,47 +68,30 @@ const List = React.createClass({
         var report = {
             dataSourceType: "json",
             data: jsonData,            
+            //licenseKey: "Z544-5U1SI3-3D1H-2J22-0U37-4L2A-0M41-3F"
+            
+            //licenseKey: "J9QU8-606W5-2R6X5-0G7YZ-VFTKI-XOT1R"
             licenseKey: "Z511-1Q1HCX-0H10-3F11-1I1F-0G2T-071C-1B1G-0T"
         };
-        
-        flexmonster.embedPivotComponent("flexmonster/", "pivotContainer", "100%", "500", report, true);
+
+        // if (window.flexmonsterView == null) {
+           if(window.currentInstancePivot === undefined){
+            window.currentInstancePivot = flexmonster.embedPivotComponent("flexmonster/", "pivotContainer", "100%", "500", report, true);
+           }else{
+            window.currentInstancePivot.setReport(report);
+            window.currentInstancePivot.refresh();
+           }
+        //     window.flexmonsterView = document.getElementById("pivot-container"); // store HTML
+        // } else {
+        //     $("pivot-container").append($(window.flexmonsterView)); // restore HTML
+        //     //setPivotReport();
+        // }
 
         return (
-            <div className="board1">
-            
-            <h1/>
-            </div>
+            <div className="board1"></div>
         )
     }
 
 });
-
-$(document).ready(function(){
-    //load current state
-    var currentBookmarks = localStorage.getItem("bookmarks_chart").split(",")
-    var bookmarksElement = $("#fm-tab-bookmarks");
-    if (bookmarksElement.length === 0) {
-        $("#fm-tab-fields").after('' +
-            '<li id="fm-tab-bookmarks" style=" float: right; ">' +
-            '<a href="javascript:void(0)"><span>bookmarks</span></a>' +
-            '<div class="fm-dropdown fm-shadow-container" style="display: none;">' +
-            '<ul class="fm-dropdown-content"> ' +
-            '</ul>' +
-            '</div>' +
-            '</li>');
-    }
-
-    currentBookmarks.forEach(function(bookmark){
-        $("#mt-tab-bookmarks ul li:last").append('' +
-            '<li class="fm-tab-bookmarks-item">' +
-            '<span>'+bookmark+'</span>' +
-            '<a href="javascript:removeTrelloBookmark(\''+bookmark+'\')">' +
-            '<i class="glyphicon glyphicon-remove" style="padding-top: 10px;padding-right: 10px;float: right;"></i></a></li> '
-        );
-    })
-
-
-})
-
 
 export default List;

@@ -19,6 +19,7 @@ FlexmonsterLoader.prototype.getToolbar = function () {
         REMOTE_REPORT_MOBILE: "Report",
         SAVE: "Save",
         GRID: "Grid",
+        BOOKMARK: "Bookmark",
         CHARTS: "Charts",
         CHARTS_BAR: "Bar",
         CHARTS_LINE: "Line",
@@ -132,53 +133,53 @@ FlexmonsterLoader.prototype.getToolbar = function () {
         // TABS
         var dataProvider = [];
         // Connect tab
-        dataProvider.push({
-            title: Labels.CONNECT, id: "fm-tab-connect",
-            menu: [
-                {
-                    title: Labels.CONNECT_LOCAL_CSV,
-                    id: "fm-tab-connect-local-csv",
-                    handler: "connectLocalCSVHandler",
-                    mobile: false
-                },
-                {
-                    title: Labels.CONNECT_LOCAL_OCSV,
-                    id: "fm-tab-connect-local-ocsv",
-                    handler: "connectLocalOCSVHandler",
-                    mobile: false
-                },
-                {
-                    title: Labels.CONNECT_LOCAL_JSON,
-                    id: "fm-tab-connect-local-json",
-                    handler: "connectLocalJSONHandler",
-                    mobile: false
-                },
-                {
-                    title: isMobile ? Labels.CONNECT_REMOTE_CSV_MOBILE : Labels.CONNECT_REMOTE_CSV,
-                    id: "fm-tab-connect-remote-csv",
-                    handler: "connectRemoteCSV"
-                },
-                {
-                    title: isMobile ? Labels.CONNECT_OLAP_MOBILE : Labels.CONNECT_OLAP,
-                    id: "fm-tab-connect-olap",
-                    handler: "connectOLAP",
-                    flat: false
-                }
-            ]
-        });
+        // dataProvider.push({
+        //     title: Labels.CONNECT, id: "fm-tab-connect",
+        //     menu: [
+        //         {
+        //             title: Labels.CONNECT_LOCAL_CSV,
+        //             id: "fm-tab-connect-local-csv",
+        //             handler: "connectLocalCSVHandler",
+        //             mobile: false
+        //         },
+        //         {
+        //             title: Labels.CONNECT_LOCAL_OCSV,
+        //             id: "fm-tab-connect-local-ocsv",
+        //             handler: "connectLocalOCSVHandler",
+        //             mobile: false
+        //         },
+        //         {
+        //             title: Labels.CONNECT_LOCAL_JSON,
+        //             id: "fm-tab-connect-local-json",
+        //             handler: "connectLocalJSONHandler",
+        //             mobile: false
+        //         },
+        //         {
+        //             title: isMobile ? Labels.CONNECT_REMOTE_CSV_MOBILE : Labels.CONNECT_REMOTE_CSV,
+        //             id: "fm-tab-connect-remote-csv",
+        //             handler: "connectRemoteCSV"
+        //         },
+        //         {
+        //             title: isMobile ? Labels.CONNECT_OLAP_MOBILE : Labels.CONNECT_OLAP,
+        //             id: "fm-tab-connect-olap",
+        //             handler: "connectOLAP",
+        //             flat: false
+        //         }
+        //     ]
+        // });
 
         // Open tab
-        dataProvider.push({
-            title: Labels.OPEN, id: "fm-tab-open",
-            menu: [
-                {title: Labels.LOCAL_REPORT, id: "fm-tab-open-local-report", handler: "openLocalReport", mobile: false},
-                {
-                    title: isMobile ? Labels.REMOTE_REPORT_MOBILE : Labels.REMOTE_REPORT,
-                    id: "fm-tab-open-remote-report",
-                    handler: "openRemoteReport"
-                }
-            ]
-        });
+        // dataProvider.push({
+        //     title: Labels.OPEN, id: "fm-tab-open",
+        //     menu: [
+        //         {title: Labels.LOCAL_REPORT, id: "fm-tab-open-local-report", handler: "openLocalReport", mobile: false},
+        //         {
+        //             title: isMobile ? Labels.REMOTE_REPORT_MOBILE : Labels.REMOTE_REPORT,
+        //             id: "fm-tab-open-remote-report",
+        //             handler: "openRemoteReport"
+        //         }
+        //     ]
+        // });
 
         // Save tab
         dataProvider.push({title: Labels.SAVE, id: "fm-tab-save", handler: "saveHandler", mobile: false});
@@ -186,6 +187,13 @@ FlexmonsterLoader.prototype.getToolbar = function () {
 
         // Grid tab
         dataProvider.push({title: Labels.GRID, id: "fm-tab-grid", handler: "gridHandler"});
+
+        dataProvider.push({
+            title: Labels.BOOKMARK, id: "fm-tab-bookmark", handler: "bookmarkHandler",
+            menu: [
+                {title: Labels.BOOKMARK, id: "fm-tab-bookmark-default", handler: null, args: "bookmark-default"},
+            ]
+        });
 
         // Charts tab
         dataProvider.push({
@@ -329,14 +337,19 @@ FlexmonsterLoader.prototype.getToolbar = function () {
             console.log(data);
             var fileName = "babyki.xml";
             $.ajax({
-                type: "POST",
-                url: "/save?fileName=" + fileName,
+                // type: "POST",
+                // url: "/save?fileName=" + fileName,
+
+                type: "GET",
+                url: "/",
+
                 data: data,
                 success: function () {
                     var currentBookmarks = localStorage.getItem("bookmarks_chart");
-                    if (currentBookmarks === undefined) {
+                    if (currentBookmarks === undefined && currentBookmarks !== null) {
                         localStorage.setItem("bookmarks_chart", JSON.stringify(fileName));
                     } else {
+                        currentBookmarks = currentBookmarks === null ? "":currentBookmarks;
                         currentBookmarks += "," + fileName;
                         localStorage.removeItem("bookmarks_chart");
                         localStorage.setItem("bookmarks_chart", currentBookmarks);
@@ -350,17 +363,17 @@ FlexmonsterLoader.prototype.getToolbar = function () {
                             '<div class="fm-dropdown fm-shadow-container" style="display: none;">' +
                             '<ul class="fm-dropdown-content"> ' +
                             '<li class="fm-tab-bookmarks-item">' +
-                            '<span>Saved 001</span>' +
+                            '<span>'+fileName+'</span>' +
                             '<a href="javascript:void(0)"></a>' +
                             '<i class="glyphicon glyphicon-remove" style="padding-top: 10px;padding-right: 10px;float: right;"></i></li> ' +
                             '</ul>' +
                             '</div>' +
                             '</li>');
                     }else{
-                        $("#mt-tab-bookmarks ul li:last").append('' +
+                        $("#fm-tab-bookmarks ul").append('' +
                             '<li class="fm-tab-bookmarks-item">' +
-                            '<span>Saved 001</span>' +
-                            '<a href="javascript:removeTrelloBookmark(\''+bookmark+'\')">' +
+                            '<span>'+fileName+'</span>' +
+                            '<a href="javascript:removeTrelloBookmark(\''+fileName+'\')">' +
                             '<i class="glyphicon glyphicon-remove" style="padding-top: 10px;padding-right: 10px;float: right;"></i></a></li>'
                         );
 
@@ -1754,6 +1767,35 @@ FlexmonsterLoader.prototype.getToolbar = function () {
             }
             self.toolbarWrapper.appendChild(toolbar);
             self.container.insertBefore(self.toolbarWrapper, self.container.firstChild);
+
+
+            console.log("Load state chart");
+            //load current state
+            var localBookmark = localStorage.getItem("bookmarks_chart");
+            if(localBookmark !== undefined && localBookmark !== null){
+                var currentBookmarks = localStorage.getItem("bookmarks_chart").split(",")
+                var bookmarksElement = $("#fm-tab-bookmarks");
+                if (bookmarksElement.length === 0) {
+                    $("#fm-tab-fields").after('' +
+                        '<li id="fm-tab-bookmarks" style=" float: right; ">' +
+                        '<a href="javascript:void(0)"><span>bookmarks</span></a>' +
+                        '<div class="fm-dropdown fm-shadow-container" style="display: none;">' +
+                        '<ul class="fm-dropdown-content"> ' +
+                        '</ul>' +
+                        '</div>' +
+                        '</li>');
+                }
+
+                currentBookmarks.forEach(function(bookmark){
+                    $("#fm-tab-bookmarks ul").append('' +
+                        '<li class="fm-tab-bookmarks-item">' +
+                        '<span>'+bookmark+'</span>' +
+                        '<a href="javascript:removeTrelloBookmark(\''+bookmark+'\')">' +
+                        '<i class="glyphicon glyphicon-remove" style="padding-top: 10px;padding-right: 10px;float: right;"></i></a></li> '
+                    );
+                })
+            }
+
         }
         self.createDivider = function () {
             var item = document.createElement("li");
@@ -2207,4 +2249,3 @@ for (var i = 0; i < FlexmonsterLoader.instances.length; i++) {
         instance.getToolbar.call(instance);
     }
 }
-		

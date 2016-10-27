@@ -118,9 +118,9 @@ flexmonster.embedPivotComponent = function(path, containerId, _width, _height, p
 	}
 	if (!params) params = {};
 	params.componentFolder = path;
-	var obj = (flexmonster.instances++ == 0) ? flexmonster : new FlexMonster();
-	obj.toolbarLabels = toolbarLabels;
-	var loader = new FlexmonsterLoader(obj, path, containerId, _width, _height, params, null, withToolbar);
+	
+	flexmonster.toolbarLabels = toolbarLabels;
+	var loader = new FlexmonsterLoader(flexmonster, path, containerId, _width, _height, params, null, withToolbar);
 	if (withToolbar) {
 		loader.loadCSS(path + 'toolbar/flexmonster.toolbar.css?' + flexmonster.version);
 		loader.scripts = ['toolbar/flexmonster.toolbar.js?' + flexmonster.version];
@@ -131,7 +131,7 @@ flexmonster.embedPivotComponent = function(path, containerId, _width, _height, p
 	loader.initDefaultScritps();
 	loader.loadScript();
 	loader.loadCSS(path + 'html5-assets/flexmonster.css?' + flexmonster.version);
-	return obj;
+	return flexmonster;
 }
 
 flexmonster.instances = 0;
