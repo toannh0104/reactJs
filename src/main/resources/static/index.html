@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="https://api.trello.com/1/client.js?key=ff455eca9d072d56e1bd62b89d14af7b"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <script type="text/javascript" src="flexmonster/flexmonster.js"></script>
+    <title>Trello Example</title>
+    <style>
+        #header {
+            float: right;
+            padding-right: 10px;
+        }
+        .warrper{
+            padding-top: 25px;
+
+        }
+        .fm-ui-modal-overlay{
+            order: -1;
+            display:none;
+        }
+        
+        #fm-branding-bar{
+            display:none;
+        }
+
+        #fm-tab-open{
+            display:none;
+        }
+        #fm-alert-view{
+            display:none !important;
+        }
+        #fm-tab-format{
+            display:none;
+        }
+
+        #fm-tab-options{
+            display:none;
+        }
+        #fm-tab-connect{
+            display:none;
+        }
+        #fm-tab-format{
+            display:none;
+        }
+        
+        
+    </style>
+
+    
+</head>
+
+<body>
+
+<div id="root" ></div>
+<div id="lists" ></div>
+<div id="pivotContainer"></div>
+<div id="cards" ></div>
+<script>
+//        var onAuthorize = function () {
+//            updateLoggedIn();
+//            Trello.members.get("me", function (member) {
+//                $("#fullName").text(member.fullName);
+//            });
+//        };
+//
+//        var updateLoggedIn = function () {
+//            var isLoggedIn = Trello.authorized();
+//            $("#loggedout").toggle(!isLoggedIn);
+//            $("#loggedin").toggle(isLoggedIn);
+//        };
+//
+//        var logout = function () {
+//            Trello.deauthorize();
+//            updateLoggedIn();
+//        };
+//
+//        Trello.authorize({
+//            interactive: false,
+//            success: onAuthorize
+//        });
+//
+//        $("#connectLink")
+//                .click(function () {
+//                    Trello.authorize({
+//                        type: "popup",
+//                        success: onAuthorize
+//                    })
+//                });
+//        $("#disconnect").click(logout);
+/*
+        $(document).ready(function () {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/sw.js', {
+                    scope: '/'
+                }).then(function(reg) {    
+                    if (reg.installing) {
+                        console.log('installing');
+                    } else if (reg.waiting) {
+                        console.log('installed');
+                    } else if (reg.active) {
+                        console.log('active');
+                    }
+                }).catch(function(error) {
+                    console.log(error);
+                });
+            }
+        });
+        */
+</script>
+<script src="/static/main.bundle.js"></script>
+<script type="text/javascript" src="/static/main.bundle.js"></script></body>
+
+</html>

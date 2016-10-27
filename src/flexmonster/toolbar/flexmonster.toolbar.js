@@ -260,7 +260,15 @@ var FlexmonsterToolbar = function(pivotContainerId, pivot, isHTML5, width, label
 
 	// Save tab
 	self.saveHandler = function() {
-		self.pivot.save("report.xml", 'file');
+		var data = self.pivot.save("report.xml", 'file');
+		$.ajax({
+		  type: "POST",
+		  url: "http://localhost:8080/save?fileName=babyki.txt",
+		  data: data,
+		  success: function(){
+		  		console.log("OKOK");
+		  }
+		});
 	}
 
 	// Grid tab

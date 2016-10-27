@@ -1,6 +1,4 @@
 import React from 'react';
-import {Pie, Line, HorizontalBar} from 'react-chartjs-2';
-
 import {fetchLists, fetchCards} from '../actions/actionCreators';
 
 const List = React.createClass({
@@ -76,47 +74,42 @@ const List = React.createClass({
         
         flexmonster.embedPivotComponent("flexmonster/", "pivotContainer", "100%", "500", report, true);
 
-        
         return (
             <div className="board1">
             
             <h1/>
-{ /*
-<table>
-    
-      _yLabels.map((label, i) =>
-        <tr key={i}>
-          <td>{label}</td>
-
-          {
-            datasets.map((ds, j) =>
-            <td>
-              {ds.label}
-            </td>
-
-          )}
-          
-        </tr>)
-    
-</table>
-*/}
-{/*
-                <div className="list">
-                    <h3>Root List</h3>
-                    <Line data={dataLine} options={chartOptions} height="150"/>
-                </div>
-                 <div className="list" >
-                 <HorizontalBar data={dataLine} />
-                 </div>
-*/}
-               
-                
-                 
-                 
             </div>
         )
     }
 
 });
+
+$(document).ready(function(){
+    //load current state
+    var currentBookmarks = localStorage.getItem("bookmarks_chart").split(",")
+    var bookmarksElement = $("#fm-tab-bookmarks");
+    if (bookmarksElement.length === 0) {
+        $("#fm-tab-fields").after('' +
+            '<li id="fm-tab-bookmarks" style=" float: right; ">' +
+            '<a href="javascript:void(0)"><span>bookmarks</span></a>' +
+            '<div class="fm-dropdown fm-shadow-container" style="display: none;">' +
+            '<ul class="fm-dropdown-content"> ' +
+            '</ul>' +
+            '</div>' +
+            '</li>');
+    }
+
+    currentBookmarks.forEach(function(bookmark){
+        $("#mt-tab-bookmarks ul li:last").append('' +
+            '<li class="fm-tab-bookmarks-item">' +
+            '<span>'+bookmark+'</span>' +
+            '<a href="javascript:removeTrelloBookmark(\''+bookmark+'\')">' +
+            '<i class="glyphicon glyphicon-remove" style="padding-top: 10px;padding-right: 10px;float: right;"></i></a></li> '
+        );
+    })
+
+
+})
+
 
 export default List;

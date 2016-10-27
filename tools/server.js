@@ -6,8 +6,18 @@ const devConfig = require('../webpack.dev.config');
 const srcPath = path.join(__dirname, '../src');
 const tmpPath = path.join(srcPath, './_tmp');
 const manifestPath = path.join(tmpPath, 'vendors-manifest.json');
-
+var fs = require('fs');
+var express = require('express');
+var app = express();
+app.use(express.static(__dirname));
 const PORT = require('../package.json').webpackDevServerPort;
+console.log(fs);
+app.get('/save', function(req, res) {
+  fs.writeFile('log.txt', 'Hello Node', function (err) {
+    if (err) throw err;
+    console.log('It\'s saved!');
+  }); // =>
+});
 
 function startDevServer() {
   devConfig.entry = {

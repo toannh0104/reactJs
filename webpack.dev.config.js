@@ -17,7 +17,7 @@ module.exports = {
     // dynamically add by server.js
   },
   output: {
-    path: path.join(__dirname, 'build/static'),
+    path: path.join(__dirname, 'src/main/resources/static'),
     filename: '[name].bundle.js',
     publicPath: '/static'
   },
