@@ -133,6 +133,16 @@
 #fm-tab-grid > a {
 	background-image: url(img/toolbar/menu_table-icon_large.png);
 }
+#fm-tab-bookmark > a {
+	background-image: url(img/toolbar/bookmark.png);	
+	background-size: auto !important;
+}
+
+#fm-tab-bookmark{
+	padding-top: 5px !important;
+	float:right !important;
+}
+
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) { 
 	#fm-tab-grid > a {
 		background-image: url(img/toolbar/menu_table-icon_large@2x.png);
@@ -243,6 +253,10 @@
 
 #fm-tab-bookmarks > a {
 	background-image: url(img/toolbar/menu_chart-icon_bar_large.png);
+}
+.fm-tab-bookmarks-item{
+	overflow: hidden;
+	vertical-align: middle;
 }
 .fm-tab-bookmarks-item > a {
 	background-image: url(img/toolbar/menu_chart-icon_bar_large.png);

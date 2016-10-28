@@ -1,3 +1,23 @@
+window.loadBookmarkState = function(){
+    var localBookmark = localStorage.getItem("bookmarks_chart");
+            if (localBookmark !== undefined && localBookmark !== null) {
+                var currentBookmarks = localStorage.getItem("bookmarks_chart").split(",")
+                var bookmarksElement = $("#fm-tab-bookmarks");
+
+
+                currentBookmarks.forEach(function (bookmark) {
+                    if (bookmark.trim() !== '') {
+                        $("#fm-tab-bookmark-default").after('' +
+                            '<li class="fm-tab-bookmarks-item">' +
+                            '<span>' + bookmark + '</span>' +
+                            '<a href="#" fileName="'+bookmark+'">' +
+                            '<i class="glyphicon glyphicon-remove" style="padding-top: 10px;padding-right: 10px;float: right;"></i></a></li> '
+                        );
+                    }
+                })
+            }
+}
+
 FlexmonsterLoader.prototype.getToolbar = function () {
     /**
      *    Toolbar for Flexmonster Pivot Table & Charts Component
@@ -111,7 +131,7 @@ FlexmonsterLoader.prototype.getToolbar = function () {
     };
 
     /*
-     *	Toolbar
+     *  Toolbar
      */
 
     var FlexmonsterToolbar = function (pivotContainerId, pivot, isHTML5, width, labels) {
@@ -230,24 +250,24 @@ FlexmonsterLoader.prototype.getToolbar = function () {
         dataProvider.push({divider: true});
 
         // Format tab
-        dataProvider.push({
-            title: Labels.FORMAT, id: "fm-tab-format",
-            menu: [
-                {
-                    title: isMobile ? Labels.FORMAT_CELLS_MOBILE : Labels.FORMAT_CELLS,
-                    id: "fm-tab-format-cells",
-                    handler: "formatCellsHandler"
-                },
-                {
-                    title: isMobile ? Labels.CONDITIONAL_FORMATTING_MOBILE : Labels.CONDITIONAL_FORMATTING,
-                    id: "fm-tab-format-conditional",
-                    handler: "conditionalFormattingHandler"
-                }
-            ]
-        });
+        // dataProvider.push({
+        //     title: Labels.FORMAT, id: "fm-tab-format",
+        //     menu: [
+        //         {
+        //             title: isMobile ? Labels.FORMAT_CELLS_MOBILE : Labels.FORMAT_CELLS,
+        //             id: "fm-tab-format-cells",
+        //             handler: "formatCellsHandler"
+        //         },
+        //         {
+        //             title: isMobile ? Labels.CONDITIONAL_FORMATTING_MOBILE : Labels.CONDITIONAL_FORMATTING,
+        //             id: "fm-tab-format-conditional",
+        //             handler: "conditionalFormattingHandler"
+        //         }
+        //     ]
+        // });
 
         // Options tab
-        dataProvider.push({title: Labels.OPTIONS, id: "fm-tab-options", handler: "optionsHandler"});
+        //.push({title: Labels.OPTIONS, id: "fm-tab-options", handler: "optionsHandler"});
 
         // Right-aligned tabs should go in reversed order due to float: right
 
@@ -333,15 +353,33 @@ FlexmonsterLoader.prototype.getToolbar = function () {
 
         // Save tab
         self.saveHandler = function () {
+            var reportName = prompt("Please enter the report name", "Chart001");
+            if (reportName === null) return;
+            
+            if (/^[\w ]+$/.test(reportName)) {
+                reportName += ".xml";
+                var currentBookmarks = localStorage.getItem("bookmarks_chart");
+                if(currentBookmarks !== undefined && currentBookmarks !== null){
+                    var bookmarks = currentBookmarks.split(",");
+                    if(bookmarks.indexOf(reportName) > -1){
+                        alert("Name is already existed!");
+                        return;
+                    }
+                }
+            } else {
+                alert("Invalid name");
+                return;
+            }
+            
             var data = self.pivot.save("report.xml", 'file');
             console.log(data);
-            var fileName = "babyki.xml";
+            var fileName = reportName;
             $.ajax({
-                // type: "POST",
-                // url: "/save?fileName=" + fileName,
+                type: "POST",
+                url: "/save?fileName=" + fileName,
 
-                type: "GET",
-                url: "/",
+                //type: "GET",
+                //url: "/",
 
                 data: data,
                 success: function () {
@@ -349,35 +387,19 @@ FlexmonsterLoader.prototype.getToolbar = function () {
                     if (currentBookmarks === undefined && currentBookmarks !== null) {
                         localStorage.setItem("bookmarks_chart", JSON.stringify(fileName));
                     } else {
-                        currentBookmarks = currentBookmarks === null ? "":currentBookmarks;
+                        currentBookmarks = currentBookmarks === null ? "" : currentBookmarks;
                         currentBookmarks += "," + fileName;
                         localStorage.removeItem("bookmarks_chart");
                         localStorage.setItem("bookmarks_chart", currentBookmarks);
                     }
 
-                    var bookmarksElement = $("#fm-tab-bookmarks");
-                    if (bookmarksElement.length === 0) {
-                        $("#fm-tab-fields").after('' +
-                            '<li id="fm-tab-bookmarks" style=" float: right; ">' +
-                            '<a href="javascript:void(0)"><span>bookmarks</span></a>' +
-                            '<div class="fm-dropdown fm-shadow-container" style="display: none;">' +
-                            '<ul class="fm-dropdown-content"> ' +
-                            '<li class="fm-tab-bookmarks-item">' +
-                            '<span>'+fileName+'</span>' +
-                            '<a href="javascript:void(0)"></a>' +
-                            '<i class="glyphicon glyphicon-remove" style="padding-top: 10px;padding-right: 10px;float: right;"></i></li> ' +
-                            '</ul>' +
-                            '</div>' +
-                            '</li>');
-                    }else{
-                        $("#fm-tab-bookmarks ul").append('' +
-                            '<li class="fm-tab-bookmarks-item">' +
-                            '<span>'+fileName+'</span>' +
-                            '<a href="javascript:removeTrelloBookmark(\''+fileName+'\')">' +
-                            '<i class="glyphicon glyphicon-remove" style="padding-top: 10px;padding-right: 10px;float: right;"></i></a></li>'
-                        );
+                    $("#fm-tab-bookmark-default").after('' +
+                        '<li class="fm-tab-bookmarks-item">' +
+                        '<span>' + fileName + '</span>' +
+                        '<a href="#" fileName="'+fileName+'">' +
+                        '<i class="glyphicon glyphicon-remove" style="padding-top: 10px;padding-right: 10px;float: right;"></i></a></li>'
+                    );
 
-                    }
                 }
             });
         }
@@ -1771,30 +1793,7 @@ FlexmonsterLoader.prototype.getToolbar = function () {
 
             console.log("Load state chart");
             //load current state
-            var localBookmark = localStorage.getItem("bookmarks_chart");
-            if(localBookmark !== undefined && localBookmark !== null){
-                var currentBookmarks = localStorage.getItem("bookmarks_chart").split(",")
-                var bookmarksElement = $("#fm-tab-bookmarks");
-                if (bookmarksElement.length === 0) {
-                    $("#fm-tab-fields").after('' +
-                        '<li id="fm-tab-bookmarks" style=" float: right; ">' +
-                        '<a href="javascript:void(0)"><span>bookmarks</span></a>' +
-                        '<div class="fm-dropdown fm-shadow-container" style="display: none;">' +
-                        '<ul class="fm-dropdown-content"> ' +
-                        '</ul>' +
-                        '</div>' +
-                        '</li>');
-                }
-
-                currentBookmarks.forEach(function(bookmark){
-                    $("#fm-tab-bookmarks ul").append('' +
-                        '<li class="fm-tab-bookmarks-item">' +
-                        '<span>'+bookmark+'</span>' +
-                        '<a href="javascript:removeTrelloBookmark(\''+bookmark+'\')">' +
-                        '<i class="glyphicon glyphicon-remove" style="padding-top: 10px;padding-right: 10px;float: right;"></i></a></li> '
-                    );
-                })
-            }
+            window.loadBookmarkState();
 
         }
         self.createDivider = function () {
@@ -2249,3 +2248,25 @@ for (var i = 0; i < FlexmonsterLoader.instances.length; i++) {
         instance.getToolbar.call(instance);
     }
 }
+
+
+$("body").on("click", ".fm-tab-bookmarks-item", function (e) {
+    var tagName = $(e.target).prop("tagName")
+    if($(e.target).prop("tagName") === "SPAN"){
+        flexmonster.load($(e.target).html());
+    }else{
+        var fileName = $(e.target).closest("a").attr("fileName");    
+
+        if (confirm("Are u sure want to delete "+ fileName)) {
+            var currentState = localStorage.getItem("bookmarks_chart");
+            if (currentState !== undefined && currentState !== null) {
+                var bookmarks = currentState.split(",");
+                bookmarks.splice(bookmarks.indexOf(fileName), 1);
+                localStorage.removeItem("bookmarks_chart");
+                localStorage.setItem("bookmarks_chart", bookmarks);
+            }
+            $(e.target).closest("li").remove();
+        }
+    }
+})
+

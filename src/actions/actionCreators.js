@@ -37,6 +37,12 @@ export function fetchLists(boardId) {
     console.log("fetch lists")
     var uri = "/boards/" + boardId + "/lists";
     var uriCards = "/boards/" + boardId + "/cards";
+
+    if(localStorage.getItem("trello_token") !== null){
+        uri = "/boards/" + boardId + "/lists?token="+ localStorage.getItem("trello_token") ;
+        var uriCards = "/boards/" + boardId + "/cards?token="+localStorage.getItem("trello_token") ;
+    }
+
     Trello.get(uri).then((lists => {
         store.dispatch({type: "FETCH_LISTS", payload: lists});
     }))

@@ -1,6 +1,21 @@
 import React from 'react';
 import {fetchLists, fetchCards} from '../actions/actionCreators';
 
+window.loadPreviosSession = function(){
+    if(flexmonster === undefined) return;
+    var localBookmark = localStorage.getItem("bookmarks_chart");
+    if (localBookmark !== undefined && localBookmark !== null) {
+        var currentBookmarks = localStorage.getItem("bookmarks_chart").split(",")
+        for(var i=currentBookmarks.length-1; i > 0; i--){
+            var bookmark = currentBookmarks[i];
+            if (bookmark !== undefined && bookmark.trim() !== '') {
+                flexmonster.load(bookmark);
+                break;
+            }
+        }
+    }
+}
+
 const List = React.createClass({
 
     render() {
@@ -70,17 +85,19 @@ const List = React.createClass({
             data: jsonData,            
             //licenseKey: "Z544-5U1SI3-3D1H-2J22-0U37-4L2A-0M41-3F"
             
-            //licenseKey: "J9QU8-606W5-2R6X5-0G7YZ-VFTKI-XOT1R"
-            licenseKey: "Z511-1Q1HCX-0H10-3F11-1I1F-0G2T-071C-1B1G-0T"
+            licenseKey: "Z53G-1T1WC3-1V1M-0L12-2M0A-1233-1I0Y-2Y2Q-1903-322S-0T2C-1I"
+            //licenseKey: "Z511-1Q1HCX-0H10-3F11-1I1F-0G2T-071C-1B1G-0T"
         };
 
         // if (window.flexmonsterView == null) {
-           if(window.currentInstancePivot === undefined){
+           if(window.currentInstancePivot === undefined || typeof(pivot) === undefined){
             window.currentInstancePivot = flexmonster.embedPivotComponent("flexmonster/", "pivotContainer", "100%", "500", report, true);
-           }else{
+           }else if(typeof(pivot) !== undefined){
             window.currentInstancePivot.setReport(report);
+            console.log(pivot);
             window.currentInstancePivot.refresh();
            }
+           window.loadPreviosSession();
         //     window.flexmonsterView = document.getElementById("pivot-container"); // store HTML
         // } else {
         //     $("pivot-container").append($(window.flexmonsterView)); // restore HTML

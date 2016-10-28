@@ -1,3 +1,23 @@
+window.loadBookmarkState = function(){
+    var localBookmark = localStorage.getItem("bookmarks_chart");
+            if (localBookmark !== undefined && localBookmark !== null) {
+                var currentBookmarks = localStorage.getItem("bookmarks_chart").split(",")
+                var bookmarksElement = $("#fm-tab-bookmarks");
+
+
+                currentBookmarks.forEach(function (bookmark) {
+                    if (bookmark.trim() !== '') {
+                        $("#fm-tab-bookmark-default").after('' +
+                            '<li class="fm-tab-bookmarks-item">' +
+                            '<span>' + bookmark + '</span>' +
+                            '<a href="#" fileName="'+bookmark+'">' +
+                            '<i class="glyphicon glyphicon-remove" style="padding-top: 10px;padding-right: 10px;float: right;"></i></a></li> '
+                        );
+                    }
+                })
+            }
+}
+
 FlexmonsterLoader.prototype.getToolbar = function () {
     /**
      *    Toolbar for Flexmonster Pivot Table & Charts Component
@@ -111,7 +131,7 @@ FlexmonsterLoader.prototype.getToolbar = function () {
     };
 
     /*
-     *	Toolbar
+     *  Toolbar
      */
 
     var FlexmonsterToolbar = function (pivotContainerId, pivot, isHTML5, width, labels) {
@@ -334,31 +354,32 @@ FlexmonsterLoader.prototype.getToolbar = function () {
         // Save tab
         self.saveHandler = function () {
             var reportName = prompt("Please enter the report name", "Chart001");
-            if (reportName != null) {
-                if (/^[\w ]+$/.test(reportName)) {
-                    reportName += ".xml";
-                    var currentBookmarks = localStorage.getItem("bookmarks_chart");
-                    if(currentBookmarks !== undefined && currentBookmarks !== null){
-                        var bookmarks = currentBookmarks.split(",");
-                        if(bookmarks.indexOf(reportName) > -1){
-                            alert("Name is already existed!");
-                            return;
-                        }
+            if (reportName === null) return;
+            
+            if (/^[\w ]+$/.test(reportName)) {
+                reportName += ".xml";
+                var currentBookmarks = localStorage.getItem("bookmarks_chart");
+                if(currentBookmarks !== undefined && currentBookmarks !== null){
+                    var bookmarks = currentBookmarks.split(",");
+                    if(bookmarks.indexOf(reportName) > -1){
+                        alert("Name is already existed!");
+                        return;
                     }
-                } else {
-                    alert("Invalid name");
-                    return;
                 }
+            } else {
+                alert("Invalid name");
+                return;
             }
+            
             var data = self.pivot.save("report.xml", 'file');
             console.log(data);
             var fileName = reportName;
             $.ajax({
-                // type: "POST",
-                // url: "/save?fileName=" + fileName,
+                type: "POST",
+                url: "/save?fileName=" + fileName,
 
-                type: "GET",
-                url: "/",
+                //type: "GET",
+                //url: "/",
 
                 data: data,
                 success: function () {
@@ -1772,23 +1793,7 @@ FlexmonsterLoader.prototype.getToolbar = function () {
 
             console.log("Load state chart");
             //load current state
-            var localBookmark = localStorage.getItem("bookmarks_chart");
-            if (localBookmark !== undefined && localBookmark !== null) {
-                var currentBookmarks = localStorage.getItem("bookmarks_chart").split(",")
-                var bookmarksElement = $("#fm-tab-bookmarks");
-
-
-                currentBookmarks.forEach(function (bookmark) {
-                    if (bookmark.trim() !== '') {
-                        $("#fm-tab-bookmark-default").after('' +
-                            '<li class="fm-tab-bookmarks-item">' +
-                            '<span>' + bookmark + '</span>' +
-                            '<a href="#" fileName="'+bookmark+'">' +
-                            '<i class="glyphicon glyphicon-remove" style="padding-top: 10px;padding-right: 10px;float: right;"></i></a></li> '
-                        );
-                    }
-                })
-            }
+            window.loadBookmarkState();
 
         }
         self.createDivider = function () {
@@ -2245,16 +2250,23 @@ for (var i = 0; i < FlexmonsterLoader.instances.length; i++) {
 }
 
 
-$(".fm-tab-bookmarks-item").click(function (e) {
-    var fileName = $(e.target).closest("a").attr("fileName");
-    if (confirm("Are u sure want to delete "+ fileName)) {
-        var currentState = localStorage.getItem("bookmarks_chart");
-        if (currentState !== undefined && currentState !== null) {
-            var bookmarks = currentState.split(",");
-            bookmarks.splice(bookmarks.indexOf(fileName), 1);
-            localStorage.removeItem("bookmarks_chart");
-            localStorage.setItem("bookmarks_chart", bookmarks);
+$("body").on("click", ".fm-tab-bookmarks-item", function (e) {
+    var tagName = $(e.target).prop("tagName")
+    if($(e.target).prop("tagName") === "SPAN"){
+        flexmonster.load($(e.target).html());
+    }else{
+        var fileName = $(e.target).closest("a").attr("fileName");    
+
+        if (confirm("Are u sure want to delete "+ fileName)) {
+            var currentState = localStorage.getItem("bookmarks_chart");
+            if (currentState !== undefined && currentState !== null) {
+                var bookmarks = currentState.split(",");
+                bookmarks.splice(bookmarks.indexOf(fileName), 1);
+                localStorage.removeItem("bookmarks_chart");
+                localStorage.setItem("bookmarks_chart", bookmarks);
+            }
+            $(e.target).closest("li").remove();
         }
-        $(e.target).closest("li").remove();
     }
 })
+

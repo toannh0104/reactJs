@@ -6,7 +6,9 @@ import {doLogout} from '../actions/actionCreators';
 const Dashboard = React.createClass({
  
     doLogout(){
+        
         doLogout();
+        window.location.reload();
     },
 
     render() {

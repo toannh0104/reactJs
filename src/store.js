@@ -16,12 +16,12 @@ const store = createStore(
 )
 
 store.dispatch((dispatch) => {    
-    if(Trello.token() === localStorage.getItem("trello_token")){
+    if(null !== localStorage.getItem("trello_token")){
             store.dispatch({type: "UPDATE_LOGGED_STATE", payload:true})
     }
-    if(Trello.token() !== undefined){
+    if(Trello.token() !== undefined || null !== localStorage.getItem("trello_token")){
         console.log("FETCH_BOARDS");
-    	 Trello.get("members/me/boards?token="+Trello.token())
+    	 Trello.get("members/me/boards?token="+localStorage.getItem("trello_token"))
          .then((boards => {
             console.log("hihi")
             dispatch({type: "FETCH_BOARDS", payload: boards});
