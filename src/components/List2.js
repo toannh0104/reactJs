@@ -83,21 +83,26 @@ const List = React.createClass({
         var report = {
             dataSourceType: "json",
             data: jsonData,            
+            jsPivotCreationCompleteHandler: "pivotCreationCompleteHandler",
             //licenseKey: "Z544-5U1SI3-3D1H-2J22-0U37-4L2A-0M41-3F"
             
             licenseKey: "Z53G-1T1WC3-1V1M-0L12-2M0A-1233-1I0Y-2Y2Q-1903-322S-0T2C-1I"
             //licenseKey: "Z511-1Q1HCX-0H10-3F11-1I1F-0G2T-071C-1B1G-0T"
         };
 
+        function pivotCreationCompleteHandler() {
+          window.loadPreviosSession();
+        }
+
         // if (window.flexmonsterView == null) {
            if(window.currentInstancePivot === undefined || typeof(pivot) === undefined){
             window.currentInstancePivot = flexmonster.embedPivotComponent("flexmonster/", "pivotContainer", "100%", "500", report, true);
            }else if(typeof(pivot) !== undefined){
             window.currentInstancePivot.setReport(report);
-            console.log(pivot);
+            //console.log(pivot);
             window.currentInstancePivot.refresh();
            }
-           window.loadPreviosSession();
+           
         //     window.flexmonsterView = document.getElementById("pivot-container"); // store HTML
         // } else {
         //     $("pivot-container").append($(window.flexmonsterView)); // restore HTML

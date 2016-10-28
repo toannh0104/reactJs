@@ -40365,7 +40365,9 @@
 	var Dashboard = _react2.default.createClass({
 	    displayName: 'Dashboard',
 	    doLogout: function doLogout() {
+
 	        (0, _actionCreators.doLogout)();
+	        window.location.reload();
 	    },
 	    render: function render() {
 	        console.log("Render dashboard");
@@ -40404,6 +40406,8 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 	var _react = __webpack_require__(5);
 
@@ -40497,20 +40501,26 @@
 	        var report = {
 	            dataSourceType: "json",
 	            data: jsonData,
+	            jsPivotCreationCompleteHandler: "pivotCreationCompleteHandler",
 	            //licenseKey: "Z544-5U1SI3-3D1H-2J22-0U37-4L2A-0M41-3F"
 
-	            //licenseKey: "J9QU8-606W5-2R6X5-0G7YZ-VFTKI-XOT1R"
-	            licenseKey: "Z511-1Q1HCX-0H10-3F11-1I1F-0G2T-071C-1B1G-0T"
+	            licenseKey: "Z53G-1T1WC3-1V1M-0L12-2M0A-1233-1I0Y-2Y2Q-1903-322S-0T2C-1I"
+	            //licenseKey: "Z511-1Q1HCX-0H10-3F11-1I1F-0G2T-071C-1B1G-0T"
 	        };
 
+	        function pivotCreationCompleteHandler() {
+	            window.loadPreviosSession();
+	        }
+
 	        // if (window.flexmonsterView == null) {
-	        if (window.currentInstancePivot === undefined) {
+	        if (window.currentInstancePivot === undefined || (typeof pivot === 'undefined' ? 'undefined' : _typeof(pivot)) === undefined) {
 	            window.currentInstancePivot = flexmonster.embedPivotComponent("flexmonster/", "pivotContainer", "100%", "500", report, true);
-	        } else {
+	        } else if ((typeof pivot === 'undefined' ? 'undefined' : _typeof(pivot)) !== undefined) {
 	            window.currentInstancePivot.setReport(report);
+	            //console.log(pivot);
 	            window.currentInstancePivot.refresh();
 	        }
-	        window.loadPreviosSession();
+
 	        //     window.flexmonsterView = document.getElementById("pivot-container"); // store HTML
 	        // } else {
 	        //     $("pivot-container").append($(window.flexmonsterView)); // restore HTML

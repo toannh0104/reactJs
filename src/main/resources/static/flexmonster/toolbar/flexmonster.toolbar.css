@@ -1123,3 +1123,6 @@ div.fm-bgColorPicker {
 #fm-tab-bookmark-default{
 	display: none;
 }
+.fm-tab-bookmarks-item span:hover{
+	cursor: pointer;
+}
