@@ -32,9 +32,7 @@ const List = React.createClass({
         var locationNames = Object.keys(locations).map(key => locations[key].name);
         var jsonData = [];
 
-    //listId, Title, Stream, labels, date, location
         for(var i = 0; i < lists.length; i++){
-            
             for(var j = 0; j < cards.length; j++){
                 if(cards[j].idList === lists[i].id){
                     var _entry={};
@@ -43,19 +41,26 @@ const List = React.createClass({
                     _entry.list = lists[i].name;                    
                     _entry.title    = _title[0];
                     _entry.job      = _title[1];
-                    //_entry.labels   = [];
+                    _entry.labels   = [];
                     _entry.streams  = "UNKNOWN";                   
                     _entry.location = "UNKNOWN";
                     _labels.forEach(function(label){
                         if(locations.indexOf(label.name.trim()) !== -1){
                             _entry.location = label.name;
                         }
-                    //    _entry.labels.push(label.name);
+                        _entry.labels.push(label.name);
+
                     })
+                    _entry.labels = _entry.labels.toString();
                     if(_entry.job !== undefined){
                         _entry.job.split(" ").forEach(function(job){
                             if(streams.indexOf(job.trim()) !== -1){
                                 _entry.streams = job;
+                                _labels.forEach(function(label){
+                                    if(label.name === job){
+                                        _entry.color = label.color;
+                                    }
+                                })
                             }
                         })
                     }
@@ -64,62 +69,11 @@ const List = React.createClass({
                 
             }
         }
-        console.log(JSON.stringify(jsonData));
-        /*
-        var indexLabel = 0;
-        var streams = [];
-        for (var i = 0; i < lists.length; i++) {
-            var labelOnList = 0;
-            for (var k = 0; k < cards.length; k++) {
-                _yLabels[i] = lists[i].name;
-                if (cards[k].idList === lists[i].id) {
-                    var __labels = cards[k].labels;
-
-                    __labels.forEach(function (l, index) {
-                        if (labels.indexOf(l.name) === -1) {
-                            labels.push(l.name);
-                            labelObjs.push({name: l.name, color: l.color, data: []});
-                        }
-                    })
-                    
-                    if (cards[k].idList === lists[i].id) {
-                        dataCandidateRemaning[i] = (dataCandidateRemaning[i] === undefined) ? 1 : dataCandidateRemaning[i] + 1;
-                        //continue;
-                    }
-                }
-            }
-        }
-
-        var jsonData = [];        
-        if(labelObjs.length > 0)  {
-          for (var j = 0; j < lists.length; j++) {
-            var _data = {};
-            _data["Lists"] = lists[j].name;
-            for (var i = 0; i < labelObjs.length; i++) {   
-                var currentLabel = labelObjs[i].name;            
-                var __currentLabelCount = 0;
-                for (var k = 0; k < cards.length; k++) {
-                    if (cards[k].idList === lists[j].id) {
-                      var __labels = cards[k].labels;
-                      var __currentLabel = currentLabel;
-
-                      __labels.forEach(function(label){
-                        if(label.name === __currentLabel){
-                          __currentLabelCount++;
-                        }
-                      })
-                    }
-                }
-                _data[currentLabel] = __currentLabelCount;                
-                continue;
-              }
-            jsonData.push(_data);
-          }
-        }
-        */
+        console.log(jsonData);
         var report = {
             dataSourceType: "json",
-            data: jsonData,            
+            data: jsonData,
+            
             jsPivotCreationCompleteHandler: "pivotCreationCompleteHandler",
             //licenseKey: "Z544-5U1SI3-3D1H-2J22-0U37-4L2A-0M41-3F"
             
@@ -131,6 +85,7 @@ const List = React.createClass({
 
         function pivotCreationCompleteHandler() {
           window.loadPreviosSession();
+          flexmonster.setReport(report);
         }
 
         if (window.currentInstancePivot == null) { 
@@ -139,11 +94,8 @@ const List = React.createClass({
         } else {
           $("pivot-container").append($(window.currentInstancePivot)); 
             flexmonster.setReport(report);
-        
         }
-
-
-
+        flexmonster.load("init.xml");
 /*
         if(typeof pivot === "undefined" || window.currentInstancePivot === undefined || window.currentInstancePivot === "undefined"){
             window.currentInstancePivot = flexmonster.embedPivotComponent("flexmonster/", "pivotContainer", "100%", "500", report, true);

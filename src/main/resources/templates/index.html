@@ -3,10 +3,10 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="jquery-1.11.1.min.js"></script>
     <script src="https://api.trello.com/1/client.js?key=ff455eca9d072d56e1bd62b89d14af7b"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
-    <script type="text/javascript" src="/flexmonster/flexmonster.js"></script>
+    <script type="text/javascript" src="flexmonster/flexmonster.js"></script>
     <title>Trello Example</title>
     <style>
         #header {
@@ -21,7 +21,7 @@
             order: -1;
             display:none;
         }
-
+        
         #fm-branding-bar{
             display:none;
         }
@@ -29,64 +29,57 @@
         #fm-tab-open{
             display:none;
         }
-        #fm-branding-bar{
-
-            display: none!important;
-        }
         #fm-alert-view{
             display:none !important;
-        }
-        #fm-tab-save{
-            /*display:none;*/
         }
         #fm-tab-format{
             display:none;
         }
 
-        #fm-tab-options{
-            display:none;
-        }
         #fm-tab-connect{
             display:none;
         }
         #fm-tab-format{
             display:none;
         }
-
-
+        #pivotContainer{
+            width: 77%;
+            float: right;
+            padding: 5px;
+            margin-top: -140px;
+        }
+        
     </style>
 
-
+    
 </head>
 
 <body>
 
-<div id="root" >
-
-</div>
+<div id="root" ></div>
 <div id="lists" ></div>
 <div id="pivotContainer"></div>
 <div id="cards" ></div>
 <script>
-    /*
-     $(document).ready(function () {
-     if ('serviceWorker' in navigator) {
-     navigator.serviceWorker.register('/sw.js', {
-     scope: '/'
-     }).then(function(reg) {
-     if (reg.installing) {
-     console.log('installing');
-     } else if (reg.waiting) {
-     console.log('installed');
-     } else if (reg.active) {
-     console.log('active');
-     }
-     }).catch(function(error) {
-     console.log(error);
-     });
-     }
-     });
-     */
+/*
+        $(document).ready(function () {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/sw.js', {
+                    scope: '/'
+                }).then(function(reg) {    
+                    if (reg.installing) {
+                        console.log('installing');
+                    } else if (reg.waiting) {
+                        console.log('installed');
+                    } else if (reg.active) {
+                        console.log('active');
+                    }
+                }).catch(function(error) {
+                    console.log(error);
+                });
+            }
+        });
+        */
 </script>
 <script src="/main.bundle.js"></script>
 </body>

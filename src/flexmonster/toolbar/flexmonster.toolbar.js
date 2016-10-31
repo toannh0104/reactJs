@@ -1,21 +1,26 @@
+var initBookmark = "Location.xml,Stream.xml";
 window.loadBookmarkState = function(){
     var localBookmark = localStorage.getItem("bookmarks_chart");
-            if (localBookmark !== undefined && localBookmark !== null) {
-                var currentBookmarks = localStorage.getItem("bookmarks_chart").split(",")
-                var bookmarksElement = $("#fm-tab-bookmarks");
 
-
-                currentBookmarks.forEach(function (bookmark) {
-                    if (bookmark.trim() !== '') {
-                        $("#fm-tab-bookmark-default").after('' +
-                            '<li class="fm-tab-bookmarks-item">' +
-                            '<span>' + bookmark + '</span>' +
-                            '<a href="#" fileName="'+bookmark+'">' +
-                            '<i class="glyphicon glyphicon-remove" style="padding-top: 10px;padding-right: 10px;float: right;"></i></a></li> '
-                        );
-                    }
-                })
-            }
+    if (localBookmark === undefined || localBookmark === null || localBookmark === "") {
+        localBookmark = initBookmark;
+        localStorage.setItem("bookmarks_chart", localBookmark);
+    }
+    
+    var currentBookmarks = localStorage.getItem("bookmarks_chart").split(",")
+    var bookmarksElement = $("#fm-tab-bookmarks");
+    currentBookmarks.forEach(function (bookmark) {
+        if (bookmark.trim() !== '') {
+            var htmlInit =  '<li class="fm-tab-bookmarks-item"><span>' + bookmark + '</span>';
+                htmlInit += '<a href="#" fileName="'+bookmark+'">';
+                if(initBookmark.indexOf(bookmark) === -1){
+                    htmlInit += '<i class="glyphicon glyphicon-remove" style="padding-top: 10px;padding-right: 10px;float: right;"></i>';
+                }
+                htmlInit += '</a></li>';
+            $("#fm-tab-bookmark-default").after(htmlInit);
+        }
+    })
+    
 }
 
 FlexmonsterLoader.prototype.getToolbar = function () {
@@ -2256,16 +2261,17 @@ $("body").on("click", ".fm-tab-bookmarks-item", function (e) {
         flexmonster.load($(e.target).html());
     }else{
         var fileName = $(e.target).closest("a").attr("fileName");    
-
-        if (confirm("Are u sure want to delete "+ fileName)) {
-            var currentState = localStorage.getItem("bookmarks_chart");
-            if (currentState !== undefined && currentState !== null) {
-                var bookmarks = currentState.split(",");
-                bookmarks.splice(bookmarks.indexOf(fileName), 1);
-                localStorage.removeItem("bookmarks_chart");
-                localStorage.setItem("bookmarks_chart", bookmarks);
+        if(initBookmark.indexOf(fileName) === -1){
+            if (confirm("Are u sure want to delete "+ fileName)) {
+                var currentState = localStorage.getItem("bookmarks_chart");
+                if (currentState !== undefined && currentState !== null) {
+                    var bookmarks = currentState.split(",");
+                    bookmarks.splice(bookmarks.indexOf(fileName), 1);
+                    localStorage.removeItem("bookmarks_chart");
+                    localStorage.setItem("bookmarks_chart", bookmarks);
+                }
+                $(e.target).closest("li").remove();
             }
-            $(e.target).closest("li").remove();
         }
     }
 })
