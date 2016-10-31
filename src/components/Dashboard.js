@@ -19,8 +19,7 @@ const Dashboard = React.createClass({
                 {loggedIn ? (                       
                     <div id="warrper" >
                         <div id="header">
-                            Logged in to as <span id="fullName"></span>
-                            <a id="disconnect" href="#" onClick={this.doLogout} > Log Out</a>
+                            <a id="disconnect" href="#" onClick={this.doLogout} className="btn btn-primary" > Log Out</a>
                         </div>
                         <Board {...this.props} />
                     </div>

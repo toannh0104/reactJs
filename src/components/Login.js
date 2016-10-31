@@ -9,10 +9,9 @@ const Login = React.createClass({
 	},
 
   render() {
-  	console.log("Login Render")
     return (      
 		<div id="loggedout">
-		    <a onClick={this.doLogin} href="#" >Login To Trello</a>
+		    <a onClick={this.doLogin} href="#" className="btn btn-primary">Login To Trello</a>
 		</div>
     )
   }

@@ -1,4 +1,5 @@
 var initBookmark = "Location.xml,Stream.xml";
+console.log("load toolbar");
 window.loadBookmarkState = function(){
     var localBookmark = localStorage.getItem("bookmarks_chart");
 

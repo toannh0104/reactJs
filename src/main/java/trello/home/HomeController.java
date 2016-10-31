@@ -28,7 +28,7 @@ class HomeController {
                                 @RequestParam(value = "fileName") String fileName,
                                 HttpServletRequest request) {
 
-        String path = request.getServletContext().getRealPath("WEB-INF\\classes\\static");
+        String path = request.getServletContext().getRealPath("WEB-INF/classes/static");
         File file = new File(path+"/"+fileName);
         try {
             PrintWriter writer = new PrintWriter(file, "UTF-8");

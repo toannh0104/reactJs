@@ -1,4 +1,5 @@
 var initBookmark = "Location.xml,Stream.xml";
+console.log("load toolbar");
 window.loadBookmarkState = function(){
     var localBookmark = localStorage.getItem("bookmarks_chart");
 
@@ -22,10 +23,11 @@ window.loadBookmarkState = function(){
     })
     
 }
-window.savecurrentdata = function(data){
+
+window.onbeforeunload = function (e) {
+// Your logic to prepare for 'Stay on this Page' goes here 
     var fileName = "init.xml";
     var data = flexmonster.save("report.xml", 'file');
-    
     $.ajax({
         type: "POST",
         url: "/save?fileName=" + fileName,
@@ -38,10 +40,6 @@ window.savecurrentdata = function(data){
             return "Looi";
         }
     });
-}
-window.onbeforeunload = function (e) {
-// Your logic to prepare for 'Stay on this Page' goes here 
-    window.savecurrentdata();
     return "Your current data may not save";
 };
 

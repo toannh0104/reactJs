@@ -91,7 +91,7 @@ function FlexMonster() {
 	this.handle=function(delta){if(this.componentObject) {if(this.componentObject.mousewheelHandler){this.componentObject.mousewheelHandler(delta);}}}
 	this.wheel=function(event,obj){var delta=0;if(!event){event = window.event;}if(event.wheelDelta){delta=event.wheelDelta/120;}else if(event.detail){delta=-event.detail/3;}if(delta)obj.handle(delta);if (event.preventDefault){event.preventDefault();}event.returnValue=false;};
 	this.replaceHierarchyCaption=function(params){this.componentObject.replaceHierarchyCaption(params)}
-	this.showAlerts = false;
+	this.showAlerts = true;
 	this.version = "2.224";
 }
 
@@ -118,9 +118,9 @@ flexmonster.embedPivotComponent = function(path, containerId, _width, _height, p
 	}
 	if (!params) params = {};
 	params.componentFolder = path;
-	
-	flexmonster.toolbarLabels = toolbarLabels;
-	var loader = new FlexmonsterLoader(flexmonster, path, containerId, _width, _height, params, null, withToolbar);
+	var obj = (flexmonster.instances++ == 0) ? flexmonster : new FlexMonster();
+	obj.toolbarLabels = toolbarLabels;
+	var loader = new FlexmonsterLoader(obj, path, containerId, _width, _height, params, null, withToolbar);
 	if (withToolbar) {
 		loader.loadCSS(path + 'toolbar/flexmonster.toolbar.css?' + flexmonster.version);
 		loader.scripts = ['toolbar/flexmonster.toolbar.js?' + flexmonster.version];
@@ -131,7 +131,7 @@ flexmonster.embedPivotComponent = function(path, containerId, _width, _height, p
 	loader.initDefaultScritps();
 	loader.loadScript();
 	loader.loadCSS(path + 'html5-assets/flexmonster.css?' + flexmonster.version);
-	return flexmonster;
+	return obj;
 }
 
 flexmonster.instances = 0;

@@ -72,9 +72,9 @@ const List = React.createClass({
             jsPivotCreationCompleteHandler: "pivotCreationCompleteHandler",
             //licenseKey: "Z544-5U1SI3-3D1H-2J22-0U37-4L2A-0M41-3F"
             
-            licenseKey: "Z53G-1T1WC3-1V1M-0L12-2M0A-1233-1I0Y-2Y2Q-1903-322S-0T2C-1I"
+            //licenseKey: "Z53G-1T1WC3-1V1M-0L12-2M0A-1233-1I0Y-2Y2Q-1903-322S-0T2C-1I"
             //licenseKey: "Z511-1Q1HCX-0H10-3F11-1I1F-0G2T-071C-1B1G-0T"
-            //licenseKey: "Z54J-2U3JG4-3X1G-0F58-0L21-4L2C-2J4H-3803-4W2T-0H58-2H1B-5226-1S1W-5C1A-2852-0P2N-5000-364S"
+            licenseKey: "Z56F-1H3CW5-541N-786H-0U6K-4W2V-2U5I-2A2Y-6U5B-0078-4M14-3Y4F"
 
         };
 
@@ -83,14 +83,22 @@ const List = React.createClass({
           flexmonster.setReport(report);
         }
 
+
         if (window.currentInstancePivot == null) { 
+            console.log(1);
           window.currentInstancePivot = flexmonster.embedPivotComponent(
-            "flexmonster/", "pivotContainer", "100%", "500", report, true);
+            "/flexmonster/", "pivotContainer", "100%", "500", report, true);
         } else {
+            console.log(2);
           $("pivot-container").append($(window.currentInstancePivot)); 
             flexmonster.setReport(report);
         }
-        flexmonster.load("init.xml");
+    
+        
+        if(flexmonster !== null){
+            console.log(3);
+            flexmonster.load("init.xml");
+        }
 /*
         if(typeof pivot === "undefined" || window.currentInstancePivot === undefined || window.currentInstancePivot === "undefined"){
             window.currentInstancePivot = flexmonster.embedPivotComponent("flexmonster/", "pivotContainer", "100%", "500", report, true);
