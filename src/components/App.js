@@ -4,7 +4,6 @@ import * as actionCreators from '../actions/actionCreators';
 import Main from './Main';
 
 function mapStateToProps(state) {
-	console.log("Reduxstagram render");
   return {
     boards: state.trello.boards,
     lists: state.trello.lists,

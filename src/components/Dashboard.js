@@ -12,7 +12,6 @@ const Dashboard = React.createClass({
     },
 
     render() {
-        console.log("Render dashboard");
         var loggedIn = !!this.props.loggin;
         return (
             <div>

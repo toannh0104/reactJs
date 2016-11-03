@@ -3,10 +3,15 @@ import List from './List';
 import {fetchLists } from '../actions/actionCreators';
 const Board = React.createClass({
 
+    getInitialState(){
+        return{
+            currentBoardId: -1
+        }
+    },
+
     loadData(boardId){
-            console.log(boardId);
             var fetchedList = fetchLists(boardId);
-            console.log("fetchedList");            
+            this.state.currentBoardId = boardId;
     },
 
     render() {
@@ -22,7 +27,7 @@ const Board = React.createClass({
                             { boards.map((board, i) =>
                                 <tr key={i}>
                                   <td className="info" key={i}>
-                                      <a onClick={this.loadData.bind(null, board.id) } > {board.name} </a>
+                                      <a id={board.id} onClick={this.loadData.bind(null, board.id) } > {board.name} </a>
                                   </td>
                                 </tr>
                             )}                        
@@ -37,7 +42,7 @@ const Board = React.createClass({
                                     <a > {list.name} </a>                                  
                                 </div>
                             )*/}
-                            <List {...this.props} />
+                            <List boardId={this.state.currentBoardId} {...this.props} />
                         </div>
 
                         ) : null }

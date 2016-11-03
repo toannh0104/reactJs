@@ -1,5 +1,4 @@
 import React from 'react';
-import {fetchLists, fetchCards} from '../actions/actionCreators';
 
 window.loadPreviosSession = function(){
     if(flexmonster === undefined) return;
@@ -64,57 +63,123 @@ const List = React.createClass({
                 
             }
         }
-        console.log(jsonData);
         var report = {
             dataSourceType: "json",
             data: jsonData,
-            
-            jsPivotCreationCompleteHandler: "pivotCreationCompleteHandler",
-            //licenseKey: "Z544-5U1SI3-3D1H-2J22-0U37-4L2A-0M41-3F"
-            
-            //licenseKey: "Z53G-1T1WC3-1V1M-0L12-2M0A-1233-1I0Y-2Y2Q-1903-322S-0T2C-1I"
-            //licenseKey: "Z511-1Q1HCX-0H10-3F11-1I1F-0G2T-071C-1B1G-0T"
-            licenseKey: "Z56F-1H3CW5-541N-786H-0U6K-4W2V-2U5I-2A2Y-6U5B-0078-4M14-3Y4F"
-
+            reportcomplete: function() {
+                pivot.off("reporteportcomplete");
+                pivotTableReportComplete = true;
+                console.log("Google chart");
+                //createGoogleChart();
+              },
+            //22//licenseKey: "Z56F-1H3CW5-541N-786H-0U6K-4W2V-2U5I-2A2Y-6U5B-0078-4M14-3Y4F"
+            licenseKey: "Z7MC-XCFB6V-5C0B1D-6K6Y2N"
         };
 
-        function pivotCreationCompleteHandler() {
-          window.loadPreviosSession();
-          flexmonster.setReport(report);
-        }
 
 
-        if (window.currentInstancePivot == null) { 
-            console.log(1);
-          window.currentInstancePivot = flexmonster.embedPivotComponent(
-            "/flexmonster/", "pivotContainer", "100%", "500", report, true);
-        } else {
-            console.log(2);
-          $("pivot-container").append($(window.currentInstancePivot)); 
-            flexmonster.setReport(report);
+var pivot = $("#pivotContainer").flexmonster({
+  report: {
+    dataSource: {
+      dataSourceType: "json",
+      data: jsonData
+    },
+  },
+  slice: {
+      rows: [
+        {uniqueName: "Category"}
+      ],
+      columns: [
+        {uniqueName: "[Measures]"}
+      ],
+      measures: [
+        {uniqueName: "Price"},
+        {uniqueName: "Quantity"},
+        {uniqueName: "Discount"}
+      ]
+    },
+    options: {
+      viewType: "grid",
+      configuratorActive: false,
+      grid: {
+        type: "compact",
+        showHeaders: false
+      }
+    }
+    ,
+  height: 221,
+  toolbar: true,
+  componentFolder: "https://s3.amazonaws.com/flexmonster/2.3/",
+  reportcomplete: function() {
+    pivot.off("reportcomplete");
+    pivotTableReportComplete = true;
+    createGoogleChart();
+  }
+});
+
+var pivotTableReportComplete = false;
+var googleChartsLoaded = false;
+
+google.charts.load('current', {'packages':['corechart','sankey']});
+google.charts.setOnLoadCallback(onGoogleChartsLoaded);
+function onGoogleChartsLoaded() {
+  googleChartsLoaded = true;
+  if (pivotTableReportComplete) {
+    createGoogleChart();
+  }
+}
+
+function createGoogleChart() {
+  if (googleChartsLoaded) {
+  
+    pivot.googlecharts.getData({}, 
+                           drawChart, 
+                           drawChart
+                          );
+                          
+    pivot.googlecharts.getData(
+      {
+        slice: {
+          rows: [{uniqueName: "Region"}],
+          columns: [{uniqueName: "Category"}, {uniqueName: "[Measures]"}],
+          measures: [{uniqueName: "Price"}],
+          expandAll: true
         }
+      }, 
+      drawSankeyChart, 
+      drawSankeyChart
+    );
+    }           
+}
+
+function drawChart(_data) {
+  var data = google.visualization.arrayToDataTable(_data.data);
+      var options = {
+        title: 'Speed Tests Results',
+        chartArea: {width: '50%'},
+        hAxis: {
+          title: 'Parses / sec',
+          minValue: 0
+        },
+        vAxis: {
+          title: 'JSON source x iterations'
+        },
+        isStacked: true
+      };
+      
+  var chart = new google.visualization.BarChart(document.getElementById('googlechart'));
+  chart.draw(data, options);
+}
+
+
+
+console.log(pivot);
+
+
+function drawSankeyChart(_data) {
+ 
+}
     
-        
-        if(flexmonster !== null){
-            console.log(3);
-            flexmonster.load("init.xml");
-        }
-/*
-        if(typeof pivot === "undefined" || window.currentInstancePivot === undefined || window.currentInstancePivot === "undefined"){
-            window.currentInstancePivot = flexmonster.embedPivotComponent("flexmonster/", "pivotContainer", "100%", "500", report, true);
-            
-        }else{
-            window.currentInstancePivot.setReport(report);
-            //console.log(pivot);
-            window.currentInstancePivot.refresh();
-        }
-           */
-        //     window.flexmonsterView = document.getElementById("pivot-container"); // store HTML
-        // } else {
-        //     $("pivot-container").append($(window.flexmonsterView)); // restore HTML
-        //     //setPivotReport();
-        // }
-
         return (
             <div className="board1"></div>
         )

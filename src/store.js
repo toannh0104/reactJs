@@ -20,10 +20,8 @@ store.dispatch((dispatch) => {
             store.dispatch({type: "UPDATE_LOGGED_STATE", payload:true})
     }
     if(Trello.token() !== undefined || null !== localStorage.getItem("trello_token")){
-        console.log("FETCH_BOARDS");
     	 Trello.get("members/me/boards?token="+localStorage.getItem("trello_token"))
          .then((boards => {
-            console.log("hihi")
             dispatch({type: "FETCH_BOARDS", payload: boards});
          })); 
     } 

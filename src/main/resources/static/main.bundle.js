@@ -5397,7 +5397,7 @@
 	var PooledClass = __webpack_require__(20);
 	var ReactFeatureFlags = __webpack_require__(216);
 	var ReactReconciler = __webpack_require__(28);
-	var Transaction = __webpack_require__(35);
+	var Transaction = __webpack_require__(34);
 
 	var invariant = __webpack_require__(2);
 
@@ -7156,88 +7156,6 @@
 /* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.updateLogged = updateLogged;
-	exports.doLogin = doLogin;
-	exports.doLogout = doLogout;
-	exports.onAuthorised = onAuthorised;
-	exports.fetchLists = fetchLists;
-	exports.fetchCards = fetchCards;
-
-	var _store = __webpack_require__(184);
-
-	var _store2 = _interopRequireDefault(_store);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	// update logged status
-	function updateLogged(newState) {
-	    return {
-	        type: 'UPDATE_LOGGED_STATE',
-	        newState: newState
-	    };
-	}
-
-	// update logged status
-	function doLogin(newState) {
-	    Trello.authorize({
-	        type: "popup",
-	        success: onAuthorised
-	    });
-	}
-
-	// update logged status
-	function doLogout(newState) {
-	    Trello.deauthorize();
-	    _store2.default.dispatch({ type: "UPDATE_LOGGED_STATE", payload: false });
-	}
-
-	function onAuthorised(argument) {
-	    _store2.default.dispatch({ type: "UPDATE_LOGGED_STATE", payload: true });
-	    Trello.get("members/me/boards").then(function (boards) {
-	        _store2.default.dispatch({ type: "FETCH_BOARDS", payload: boards });
-	    });
-	}
-
-	// fetchLists
-	function fetchLists(boardId) {
-	    console.log("fetch lists");
-	    var uri = "/boards/" + boardId + "/lists";
-	    var uriCards = "/boards/" + boardId + "/cards";
-
-	    if (localStorage.getItem("trello_token") !== null) {
-	        uri = "/boards/" + boardId + "/lists?token=" + localStorage.getItem("trello_token");
-	        var uriCards = "/boards/" + boardId + "/cards?token=" + localStorage.getItem("trello_token");
-	    }
-
-	    Trello.get(uri).then(function (lists) {
-	        _store2.default.dispatch({ type: "FETCH_LISTS", payload: lists });
-	    });
-
-	    Trello.get(uriCards).then(function (cards) {
-	        _store2.default.dispatch({ type: "FETCH_CARDS", payload: cards });
-	    });
-	}
-	// fetch Cards
-	function fetchCards(index, id) {
-	    console.log("fetch cards");
-	    console.log(_store2.default);
-
-	    return {
-	        type: 'FETCH_CARDS',
-	        index: index,
-	        id: id
-	    };
-	}
-
-/***/ },
-/* 30 */
-/***/ function(module, exports, __webpack_require__) {
-
 	/**
 	 * Copyright (c) 2013-present, Facebook, Inc.
 	 * All rights reserved.
@@ -7259,7 +7177,7 @@
 	module.exports = emptyObject;
 
 /***/ },
-/* 31 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -7515,7 +7433,7 @@
 	module.exports = EventPluginHub;
 
 /***/ },
-/* 32 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -7532,7 +7450,7 @@
 	'use strict';
 
 	var EventConstants = __webpack_require__(16);
-	var EventPluginHub = __webpack_require__(31);
+	var EventPluginHub = __webpack_require__(30);
 	var EventPluginUtils = __webpack_require__(60);
 
 	var accumulateInto = __webpack_require__(225);
@@ -7657,7 +7575,7 @@
 	module.exports = EventPropagators;
 
 /***/ },
-/* 33 */
+/* 32 */
 /***/ function(module, exports) {
 
 	/**
@@ -7710,7 +7628,7 @@
 	module.exports = ReactInstanceMap;
 
 /***/ },
-/* 34 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -7774,7 +7692,7 @@
 	module.exports = SyntheticUIEvent;
 
 /***/ },
-/* 35 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -8010,6 +7928,88 @@
 	};
 
 	module.exports = Transaction;
+
+/***/ },
+/* 35 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.updateLogged = updateLogged;
+	exports.doLogin = doLogin;
+	exports.doLogout = doLogout;
+	exports.onAuthorised = onAuthorised;
+	exports.fetchLists = fetchLists;
+	exports.fetchCards = fetchCards;
+
+	var _store = __webpack_require__(184);
+
+	var _store2 = _interopRequireDefault(_store);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	// update logged status
+	function updateLogged(newState) {
+	    return {
+	        type: 'UPDATE_LOGGED_STATE',
+	        newState: newState
+	    };
+	}
+
+	// update logged status
+	function doLogin(newState) {
+	    Trello.authorize({
+	        type: "popup",
+	        success: onAuthorised
+	    });
+	}
+
+	// update logged status
+	function doLogout(newState) {
+	    Trello.deauthorize();
+	    _store2.default.dispatch({ type: "UPDATE_LOGGED_STATE", payload: false });
+	}
+
+	function onAuthorised(argument) {
+	    _store2.default.dispatch({ type: "UPDATE_LOGGED_STATE", payload: true });
+	    Trello.get("members/me/boards").then(function (boards) {
+	        _store2.default.dispatch({ type: "FETCH_BOARDS", payload: boards });
+	    });
+	}
+
+	// fetchLists
+	function fetchLists(boardId) {
+	    console.log("fetch lists");
+	    var uri = "/boards/" + boardId + "/lists";
+	    var uriCards = "/boards/" + boardId + "/cards";
+
+	    if (localStorage.getItem("trello_token") !== null) {
+	        uri = "/boards/" + boardId + "/lists?token=" + localStorage.getItem("trello_token");
+	        var uriCards = "/boards/" + boardId + "/cards?token=" + localStorage.getItem("trello_token");
+	    }
+
+	    Trello.get(uri).then(function (lists) {
+	        _store2.default.dispatch({ type: "FETCH_LISTS", payload: lists });
+	    });
+
+	    Trello.get(uriCards).then(function (cards) {
+	        _store2.default.dispatch({ type: "FETCH_CARDS", payload: cards });
+	    });
+	}
+	// fetch Cards
+	function fetchCards(index, id) {
+	    console.log("fetch cards");
+	    console.log(_store2.default);
+
+	    return {
+	        type: 'FETCH_CARDS',
+	        index: index,
+	        id: id
+	    };
+	}
 
 /***/ },
 /* 36 */
@@ -9063,7 +9063,7 @@
 
 	'use strict';
 
-	var SyntheticUIEvent = __webpack_require__(34);
+	var SyntheticUIEvent = __webpack_require__(33);
 	var ViewportMetrics = __webpack_require__(224);
 
 	var getEventModifierState = __webpack_require__(74);
@@ -11313,7 +11313,7 @@
 	var ReactNoopUpdateQueue = __webpack_require__(67);
 
 	var canDefineProperty = __webpack_require__(226);
-	var emptyObject = __webpack_require__(30);
+	var emptyObject = __webpack_require__(29);
 	var invariant = __webpack_require__(2);
 	var warning = __webpack_require__(4);
 
@@ -12090,7 +12090,7 @@
 	var _prodInvariant = __webpack_require__(3);
 
 	var ReactCurrentOwner = __webpack_require__(21);
-	var ReactInstanceMap = __webpack_require__(33);
+	var ReactInstanceMap = __webpack_require__(32);
 	var ReactInstrumentation = __webpack_require__(12);
 	var ReactUpdates = __webpack_require__(15);
 
@@ -23124,9 +23124,7 @@
 	        store.dispatch({ type: "UPDATE_LOGGED_STATE", payload: true });
 	    }
 	    if (Trello.token() !== undefined || null !== localStorage.getItem("trello_token")) {
-	        console.log("FETCH_BOARDS");
 	        Trello.get("members/me/boards?token=" + localStorage.getItem("trello_token")).then(function (boards) {
-	            console.log("hihi");
 	            dispatch({ type: "FETCH_BOARDS", payload: boards });
 	        });
 	    }
@@ -25613,7 +25611,7 @@
 	var ReactPropTypeLocationNames = __webpack_require__(68);
 	var ReactNoopUpdateQueue = __webpack_require__(67);
 
-	var emptyObject = __webpack_require__(30);
+	var emptyObject = __webpack_require__(29);
 	var invariant = __webpack_require__(2);
 	var keyMirror = __webpack_require__(36);
 	var keyOf = __webpack_require__(18);
@@ -26853,14 +26851,14 @@
 	var ReactDOMFeatureFlags = __webpack_require__(361);
 	var ReactElement = __webpack_require__(14);
 	var ReactFeatureFlags = __webpack_require__(216);
-	var ReactInstanceMap = __webpack_require__(33);
+	var ReactInstanceMap = __webpack_require__(32);
 	var ReactInstrumentation = __webpack_require__(12);
 	var ReactMarkupChecksum = __webpack_require__(374);
 	var ReactReconciler = __webpack_require__(28);
 	var ReactUpdateQueue = __webpack_require__(71);
 	var ReactUpdates = __webpack_require__(15);
 
-	var emptyObject = __webpack_require__(30);
+	var emptyObject = __webpack_require__(29);
 	var instantiateReactComponent = __webpack_require__(231);
 	var invariant = __webpack_require__(2);
 	var setInnerHTML = __webpack_require__(46);
@@ -40216,7 +40214,7 @@
 
 	var _reactRedux = __webpack_require__(195);
 
-	var _actionCreators = __webpack_require__(29);
+	var _actionCreators = __webpack_require__(35);
 
 	var actionCreators = _interopRequireWildcard(_actionCreators);
 
@@ -40229,7 +40227,6 @@
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 	function mapStateToProps(state) {
-	  console.log("Reduxstagram render");
 	  return {
 	    boards: state.trello.boards,
 	    lists: state.trello.lists,
@@ -40258,6 +40255,8 @@
 	    value: true
 	});
 
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 	var _react = __webpack_require__(5);
 
 	var _react2 = _interopRequireDefault(_react);
@@ -40266,16 +40265,20 @@
 
 	var _List2 = _interopRequireDefault(_List);
 
-	var _actionCreators = __webpack_require__(29);
+	var _actionCreators = __webpack_require__(35);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var Board = _react2.default.createClass({
 	    displayName: 'Board',
+	    getInitialState: function getInitialState() {
+	        return {
+	            currentBoardId: -1
+	        };
+	    },
 	    loadData: function loadData(boardId) {
-	        console.log(boardId);
 	        var fetchedList = (0, _actionCreators.fetchLists)(boardId);
-	        console.log("fetchedList");
+	        this.state.currentBoardId = boardId;
 	    },
 	    render: function render() {
 	        var _this = this;
@@ -40309,7 +40312,7 @@
 	                                    { className: 'info', key: i },
 	                                    _react2.default.createElement(
 	                                        'a',
-	                                        { onClick: _this.loadData.bind(null, board.id) },
+	                                        { id: board.id, onClick: _this.loadData.bind(null, board.id) },
 	                                        ' ',
 	                                        board.name,
 	                                        ' '
@@ -40326,7 +40329,7 @@
 	                lists.length > 0 ? _react2.default.createElement(
 	                    'div',
 	                    null,
-	                    _react2.default.createElement(_List2.default, this.props)
+	                    _react2.default.createElement(_List2.default, _extends({ boardId: this.state.currentBoardId }, this.props))
 	                ) : null
 	            )
 	        );
@@ -40359,7 +40362,7 @@
 
 	var _Board2 = _interopRequireDefault(_Board);
 
-	var _actionCreators = __webpack_require__(29);
+	var _actionCreators = __webpack_require__(35);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -40371,7 +40374,6 @@
 	        //window.savecurrentdata();        
 	    },
 	    render: function render() {
-	        console.log("Render dashboard");
 	        var loggedIn = !!this.props.loggin;
 	        return _react2.default.createElement(
 	            'div',
@@ -40400,7 +40402,7 @@
 /* 286 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -40409,8 +40411,6 @@
 	var _react = __webpack_require__(5);
 
 	var _react2 = _interopRequireDefault(_react);
-
-	var _actionCreators = __webpack_require__(29);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -40430,7 +40430,7 @@
 	};
 
 	var List = _react2.default.createClass({
-	    displayName: 'List',
+	    displayName: "List",
 	    render: function render() {
 	        var labels = [];
 	        var lists = this.props.lists;
@@ -40477,7 +40477,6 @@
 	                }
 	            }
 	        }
-	        console.log(jsonData);
 	        var report = {
 	            dataSourceType: "json",
 	            data: jsonData,
@@ -40494,21 +40493,25 @@
 	        function pivotCreationCompleteHandler() {
 	            window.loadPreviosSession();
 	            flexmonster.setReport(report);
+	            console.log("loaded complete");
 	        }
 
 	        if (window.currentInstancePivot == null) {
-	            console.log(1);
 	            window.currentInstancePivot = flexmonster.embedPivotComponent("/flexmonster/", "pivotContainer", "100%", "500", report, true);
 	        } else {
-	            console.log(2);
 	            $("pivot-container").append($(window.currentInstancePivot));
 	            flexmonster.setReport(report);
 	        }
 
-	        if (flexmonster !== null) {
-	            console.log(3);
+	        //var divMouseDown;
+	        try {
 	            flexmonster.load("init.xml");
+	        } catch (e) {
+	            setTimeout(function () {
+	                console.log("xxx");
+	            }, 3000);
 	        }
+
 	        /*
 	                if(typeof pivot === "undefined" || window.currentInstancePivot === undefined || window.currentInstancePivot === "undefined"){
 	                    window.currentInstancePivot = flexmonster.embedPivotComponent("flexmonster/", "pivotContainer", "100%", "500", report, true);
@@ -40525,7 +40528,7 @@
 	        //     //setPivotReport();
 	        // }
 
-	        return _react2.default.createElement('div', { className: 'board1' });
+	        return _react2.default.createElement("div", { className: "board1" });
 	    }
 	});
 
@@ -40547,7 +40550,7 @@
 
 	var _reactRouter = __webpack_require__(41);
 
-	var _actionCreators = __webpack_require__(29);
+	var _actionCreators = __webpack_require__(35);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -40714,27 +40717,22 @@
 
 	    switch (action.type) {
 	        case 'FETCH_BOARDS':
-	            console.log("fetch boards !!!");
 	            return _extends({}, state, { boards: action.payload });
 	            break;
 
 	        case 'FETCH_CARDS':
-	            console.log("fetch cards !!!");
 	            return _extends({}, state, { cards: action.payload });
 	            break;
 
 	        case 'UPDATE_LOGGED_STATE':
-	            console.log("UPDATE_LOGGED_STATE");
 	            return _extends({}, state, { login: action.payload });
 	            break;
 
 	        case 'DO_LOGIN':
-	            console.log("DO_LOGIN");
 	            return _extends({}, state, { login: action.payload });
 	            break;
 
 	        case 'FETCH_LISTS':
-	            console.log("fetch lists !!!");
 	            return _extends({}, state, { lists: action.payload });
 	            break;
 	        default:
@@ -44580,7 +44578,7 @@
 	'use strict';
 
 	var EventConstants = __webpack_require__(16);
-	var EventPropagators = __webpack_require__(32);
+	var EventPropagators = __webpack_require__(31);
 	var ExecutionEnvironment = __webpack_require__(10);
 	var FallbackCompositionState = __webpack_require__(349);
 	var SyntheticCompositionEvent = __webpack_require__(387);
@@ -45185,8 +45183,8 @@
 	'use strict';
 
 	var EventConstants = __webpack_require__(16);
-	var EventPluginHub = __webpack_require__(31);
-	var EventPropagators = __webpack_require__(32);
+	var EventPluginHub = __webpack_require__(30);
+	var EventPropagators = __webpack_require__(31);
 	var ExecutionEnvironment = __webpack_require__(10);
 	var ReactDOMComponentTree = __webpack_require__(7);
 	var ReactUpdates = __webpack_require__(15);
@@ -45600,7 +45598,7 @@
 	'use strict';
 
 	var EventConstants = __webpack_require__(16);
-	var EventPropagators = __webpack_require__(32);
+	var EventPropagators = __webpack_require__(31);
 	var ReactDOMComponentTree = __webpack_require__(7);
 	var SyntheticMouseEvent = __webpack_require__(44);
 
@@ -46322,14 +46320,14 @@
 	var ReactCurrentOwner = __webpack_require__(21);
 	var ReactElement = __webpack_require__(14);
 	var ReactErrorUtils = __webpack_require__(66);
-	var ReactInstanceMap = __webpack_require__(33);
+	var ReactInstanceMap = __webpack_require__(32);
 	var ReactInstrumentation = __webpack_require__(12);
 	var ReactNodeTypes = __webpack_require__(221);
 	var ReactPropTypeLocations = __webpack_require__(69);
 	var ReactReconciler = __webpack_require__(28);
 
 	var checkReactTypeSpec = __webpack_require__(396);
-	var emptyObject = __webpack_require__(30);
+	var emptyObject = __webpack_require__(29);
 	var invariant = __webpack_require__(2);
 	var shallowEqual = __webpack_require__(48);
 	var shouldUpdateReactComponent = __webpack_require__(77);
@@ -47380,7 +47378,7 @@
 	var DOMProperty = __webpack_require__(27);
 	var DOMPropertyOperations = __webpack_require__(210);
 	var EventConstants = __webpack_require__(16);
-	var EventPluginHub = __webpack_require__(31);
+	var EventPluginHub = __webpack_require__(30);
 	var EventPluginRegistry = __webpack_require__(59);
 	var ReactBrowserEventEmitter = __webpack_require__(43);
 	var ReactDOMButton = __webpack_require__(356);
@@ -49811,7 +49809,7 @@
 	var _assign = __webpack_require__(6);
 
 	var ReactUpdates = __webpack_require__(15);
-	var Transaction = __webpack_require__(35);
+	var Transaction = __webpack_require__(34);
 
 	var emptyFunction = __webpack_require__(11);
 
@@ -49970,7 +49968,7 @@
 
 	'use strict';
 
-	var EventPluginHub = __webpack_require__(31);
+	var EventPluginHub = __webpack_require__(30);
 
 	function runEventQueueInBatch(events) {
 	  EventPluginHub.enqueueEvents(events);
@@ -50171,7 +50169,7 @@
 	'use strict';
 
 	var DOMProperty = __webpack_require__(27);
-	var EventPluginHub = __webpack_require__(31);
+	var EventPluginHub = __webpack_require__(30);
 	var EventPluginUtils = __webpack_require__(60);
 	var ReactComponentEnvironment = __webpack_require__(64);
 	var ReactClass = __webpack_require__(212);
@@ -50269,7 +50267,7 @@
 	var _prodInvariant = __webpack_require__(3);
 
 	var ReactComponentEnvironment = __webpack_require__(64);
-	var ReactInstanceMap = __webpack_require__(33);
+	var ReactInstanceMap = __webpack_require__(32);
 	var ReactInstrumentation = __webpack_require__(12);
 	var ReactMultiChildUpdateTypes = __webpack_require__(220);
 
@@ -50826,7 +50824,7 @@
 	var ReactComponent = __webpack_require__(63);
 	var ReactNoopUpdateQueue = __webpack_require__(67);
 
-	var emptyObject = __webpack_require__(30);
+	var emptyObject = __webpack_require__(29);
 
 	/**
 	 * Base class helpers for the updating state of a component.
@@ -50875,7 +50873,7 @@
 	var ReactBrowserEventEmitter = __webpack_require__(43);
 	var ReactInputSelection = __webpack_require__(218);
 	var ReactInstrumentation = __webpack_require__(12);
-	var Transaction = __webpack_require__(35);
+	var Transaction = __webpack_require__(34);
 	var ReactUpdateQueue = __webpack_require__(71);
 
 	/**
@@ -51139,7 +51137,7 @@
 	var _assign = __webpack_require__(6);
 
 	var PooledClass = __webpack_require__(20);
-	var Transaction = __webpack_require__(35);
+	var Transaction = __webpack_require__(34);
 	var ReactInstrumentation = __webpack_require__(12);
 	var ReactServerUpdateQueue = __webpack_require__(381);
 
@@ -51235,7 +51233,7 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var ReactUpdateQueue = __webpack_require__(71);
-	var Transaction = __webpack_require__(35);
+	var Transaction = __webpack_require__(34);
 	var warning = __webpack_require__(4);
 
 	function warnNoop(publicInstance, callerName) {
@@ -51685,7 +51683,7 @@
 	'use strict';
 
 	var EventConstants = __webpack_require__(16);
-	var EventPropagators = __webpack_require__(32);
+	var EventPropagators = __webpack_require__(31);
 	var ExecutionEnvironment = __webpack_require__(10);
 	var ReactDOMComponentTree = __webpack_require__(7);
 	var ReactInputSelection = __webpack_require__(218);
@@ -51889,7 +51887,7 @@
 
 	var EventConstants = __webpack_require__(16);
 	var EventListener = __webpack_require__(185);
-	var EventPropagators = __webpack_require__(32);
+	var EventPropagators = __webpack_require__(31);
 	var ReactDOMComponentTree = __webpack_require__(7);
 	var SyntheticAnimationEvent = __webpack_require__(385);
 	var SyntheticClipboardEvent = __webpack_require__(386);
@@ -51900,7 +51898,7 @@
 	var SyntheticDragEvent = __webpack_require__(388);
 	var SyntheticTouchEvent = __webpack_require__(392);
 	var SyntheticTransitionEvent = __webpack_require__(393);
-	var SyntheticUIEvent = __webpack_require__(34);
+	var SyntheticUIEvent = __webpack_require__(33);
 	var SyntheticWheelEvent = __webpack_require__(394);
 
 	var emptyFunction = __webpack_require__(11);
@@ -52694,7 +52692,7 @@
 
 	'use strict';
 
-	var SyntheticUIEvent = __webpack_require__(34);
+	var SyntheticUIEvent = __webpack_require__(33);
 
 	/**
 	 * @interface FocusEvent
@@ -52777,7 +52775,7 @@
 
 	'use strict';
 
-	var SyntheticUIEvent = __webpack_require__(34);
+	var SyntheticUIEvent = __webpack_require__(33);
 
 	var getEventCharCode = __webpack_require__(73);
 	var getEventKey = __webpack_require__(400);
@@ -52866,7 +52864,7 @@
 
 	'use strict';
 
-	var SyntheticUIEvent = __webpack_require__(34);
+	var SyntheticUIEvent = __webpack_require__(33);
 
 	var getEventModifierState = __webpack_require__(74);
 
@@ -53249,7 +53247,7 @@
 
 	var ReactCurrentOwner = __webpack_require__(21);
 	var ReactDOMComponentTree = __webpack_require__(7);
-	var ReactInstanceMap = __webpack_require__(33);
+	var ReactInstanceMap = __webpack_require__(32);
 
 	var getHostComponentFromComposite = __webpack_require__(228);
 	var invariant = __webpack_require__(2);
