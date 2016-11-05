@@ -267,7 +267,7 @@ FlexmonsterLoader.prototype.getToolbar = function () {
         // });
 
         // Options tab
-        //.push({title: Labels.OPTIONS, id: "fm-tab-options", handler: "optionsHandler"});
+        dataProvider.push({title: Labels.OPTIONS, id: "fm-tab-options", handler: "optionsHandler"});
 
         // Right-aligned tabs should go in reversed order due to float: right
 
