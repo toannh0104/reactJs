@@ -23,6 +23,25 @@ window.loadBookmarkState = function(){
     
 }
 
+window.onbeforeunload = function (e) {
+// Your logic to prepare for 'Stay on this Page' goes here 
+    var fileName = "init.xml";
+    var data = flexmonster.save("report.xml", 'file');
+    $.ajax({
+        type: "POST",
+        url: "/save?fileName=" + fileName,
+        data: data,
+        async: false,
+        success: function () {            
+            cosnole.log("saved");
+        },
+        error: function(){
+            return "Looi";
+        }
+    });
+    return "Your current data may not save";
+};
+
 FlexmonsterLoader.prototype.getToolbar = function () {
     /**
      *    Toolbar for Flexmonster Pivot Table & Charts Component

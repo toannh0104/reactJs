@@ -40366,9 +40366,9 @@
 	var Dashboard = _react2.default.createClass({
 	    displayName: 'Dashboard',
 	    doLogout: function doLogout() {
-
 	        (0, _actionCreators.doLogout)();
 	        window.location.reload();
+	        //window.savecurrentdata();        
 	    },
 	    render: function render() {
 	        console.log("Render dashboard");
@@ -40434,12 +40434,7 @@
 	var List = _react2.default.createClass({
 	    displayName: 'List',
 	    render: function render() {
-	        console.log("Render List");
-	        var datasets = [];
-	        var _yLabels = [];
 	        var labels = [];
-	        var labelObjs = [];
-	        var dataCandidateRemaning = [];
 	        var lists = this.props.lists;
 	        var cards = this.props.cards;
 	        var locations = this.props.locations;

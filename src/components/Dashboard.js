@@ -5,10 +5,10 @@ import Board from './Board';
 import {doLogout} from '../actions/actionCreators';
 const Dashboard = React.createClass({
  
-    doLogout(){
-        
+    doLogout(){        
         doLogout();
         window.location.reload();
+        //window.savecurrentdata();        
     },
 
     render() {

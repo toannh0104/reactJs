@@ -22,6 +22,28 @@ window.loadBookmarkState = function(){
     })
     
 }
+window.savecurrentdata = function(data){
+    var fileName = "init.xml";
+    var data = flexmonster.save("report.xml", 'file');
+    
+    $.ajax({
+        type: "POST",
+        url: "/save?fileName=" + fileName,
+        data: data,
+        async: false,
+        success: function () {            
+            cosnole.log("saved");
+        },
+        error: function(){
+            return "Looi";
+        }
+    });
+}
+window.onbeforeunload = function (e) {
+// Your logic to prepare for 'Stay on this Page' goes here 
+    window.savecurrentdata();
+    return "Your current data may not save";
+};
 
 FlexmonsterLoader.prototype.getToolbar = function () {
     /**
